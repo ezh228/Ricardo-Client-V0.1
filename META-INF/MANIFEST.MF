@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Main-Class: net.minecraft.client.main.Main
+Class-Path: httpclient-4.3.3.jar platform-3.4.0.jar codecwav-20101023.ja
+ r patchy-1.3.9.jar commons-logging-1.1.3.jar libraryjavasound-20101123.
+ jar log4j-api-2.8.1.jar log4j-core-2.8.1.jar commons-io-2.5.jar authlib
+ -1.5.25.jar commons-compress-1.8.1.jar icu4j-core-mojang-51.2.jar fastu
+ til-7.1.0.jar jutils-1.0.0.jar jsr305-3.0.1.jar jopt-simple-5.0.3.jar c
+ ommons-lang3-3.5.jar 1.12.2.jar guava-21.0.jar codecjorbis-20101023.jar
+  jinput-2.0.5.jar httpcore-4.3.2.jar librarylwjglopenal-20100824.jar co
+ mmons-codec-1.10.jar netty-all-4.1.9.Final.jar realms-1.10.22.jar lwjgl
+ _util-2.9.4-nightly-20150209.jar jna-4.4.0.jar lwjgl-2.9.4-nightly-2015
+ 0209.jar text2speech-1.10.3.jar soundsystem-20120107.jar gson-2.8.0.jar
+  oshi-core-1.1.jar
+
