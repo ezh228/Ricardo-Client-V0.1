@@ -1,5 +1,6 @@
 package ru.terrarXD.module.modules.Combat;
 
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
@@ -34,13 +35,14 @@ import java.util.Comparator;
 public class AimBot extends Module {
     BooleanSetting bots;
     BooleanSetting silent;
+    BooleanSetting autoPredict;
     FloatSetting predict;
     BooleanSetting selfPredict;
     FloatSetting fov;
     BooleanSetting autoShoot;
 
-    FloatSetting minCPS;
-    FloatSetting maxCPS;
+    //FloatSetting minCPS;
+    //FloatSetting maxCPS;
 
     TimerUtils timer;
 
@@ -55,11 +57,12 @@ public class AimBot extends Module {
         super("AimBot", Category.Combat);
         add(bots = new BooleanSetting("Bots", false));
         add(silent = new BooleanSetting("Silent", true));
-        add(predict = new FloatSetting("Predict", 0, 10, 5.5f, 0.1f));
+        add(autoPredict = new BooleanSetting("AutoPredict", true));
+        add(predict = (FloatSetting) new FloatSetting("Predict", 0, 10, 5.5f, 0.1f).setVisible(()->!autoPredict.getVal()));
         add(fov = new FloatSetting("Fov", 0, 360, 90, 1));
         add(autoShoot = new BooleanSetting("AutoShoot", true));
-        add(minCPS = (FloatSetting) new FloatSetting("MinCPS", 0, 30, 13, 1).setVisible(()->autoShoot.getVal()));
-        add(maxCPS = (FloatSetting) new FloatSetting("MaxCPS", 0, 30, 16, 1).setVisible(()->autoShoot.getVal()));
+        //add(minCPS = (FloatSetting) new FloatSetting("MinCPS", 0, 30, 13, 1).setVisible(()->autoShoot.getVal()));
+        //add(maxCPS = (FloatSetting) new FloatSetting("MaxCPS", 0, 30, 16, 1).setVisible(()->autoShoot.getVal()));
 
         add(selfPredict = new BooleanSetting("SelfPredict", false));
         timer = new TimerUtils();
@@ -95,9 +98,14 @@ public class AimBot extends Module {
             return null;
         }
         Vec3d pos = vec3ds.get(0);
-        pos.xCoord = pos.xCoord+target.posX- (target.lastTickPosX-target.posX)*predict.getVal();
+        float pred = predict.getVal();
+        if (autoPredict.getVal()){
+            pred = (mc.getConnection().getPlayerInfo(this.mc.player.getUniqueID()).getResponseTime()) / 20f;
+
+        }
+        pos.xCoord = pos.xCoord+target.posX- (target.lastTickPosX-target.posX)*pred;
         pos.yCoord = pos.yCoord+target.posY;
-        pos.zCoord = pos.zCoord+target.posZ-(target.lastTickPosZ-target.posZ)*predict.getVal();
+        pos.zCoord = pos.zCoord+target.posZ-(target.lastTickPosZ-target.posZ)*pred;
 
         return pos;
     }
@@ -105,6 +113,10 @@ public class AimBot extends Module {
     @EventTarget
     public void onUpdate(EventUpdate event){
         //2658
+        if (mc.currentScreen instanceof GuiSleepMP){
+            setEnabled(false);
+            return;
+        }
         work = false;
         EntityLivingBase target = getTarget();
         if (target == null){
@@ -154,32 +166,25 @@ public class AimBot extends Module {
     @EventTarget
     public void onRender2D(EventRender2D event){
 
+
+    }
+
+
+    @EventTarget
+    public void onPostUpdate(EventPostUpdate event){
         EntityLivingBase target = getTarget();
         if (target == null){
             return;
         }
         //System.out.println("hasTarget");
         if (autoShoot.getVal()){
-            if(timer.hasReached((long) MathUtils.getRandomInRange(1000/maxCPS.getVal(), 1000/minCPS.getVal()))){
-            //if(mc.player.getCooldownTracker().getCooldown(mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem(), mc.getRenderPartialTicks()) == 0){
-                if (mc.world.getBlockState(new BlockPos(mc.player.posX, mc.player.posY + 1, mc.player.posZ)).getBlock() != Blocks.AIR){
-                    mc.playerController.clickBlock(new BlockPos(mc.player.posX, mc.player.posY + 1, mc.player.posZ), EnumFacing.UP);
-                }
-                //System.out.println("shoot");
-                mc.player.swingArm(EnumHand.MAIN_HAND);
-                if (mc.player.getDistanceToEntity(target) < 4){
-                    mc.playerController.attackEntity(mc.player, target);
-                }
+            if(timer.hasReached(300)){
+
+                mc.clickMouse();
                 timer.reset();
             }
 
         }
-    }
-
-
-    @EventTarget
-    public void onPostUpdate(EventPostUpdate event){
-
     }
 
 

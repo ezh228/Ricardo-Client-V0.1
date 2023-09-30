@@ -84,6 +84,7 @@ import ru.terrarXD.Client;
 import ru.terrarXD.module.modules.Combat.AntiAim;
 import ru.terrarXD.shit.event.events.EventPostUpdate;
 import ru.terrarXD.shit.event.events.EventPush;
+import ru.terrarXD.shit.event.events.EventSwingArm;
 import ru.terrarXD.shit.event.events.EventUpdate;
 
 
@@ -394,6 +395,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void swingArm(EnumHand hand)
     {
         super.swingArm(hand);
+        EventSwingArm event = new EventSwingArm(hand);
+        event.call();
+        if (event.isCancelled()){
+            return;
+        }
         this.connection.sendPacket(new CPacketAnimation(hand));
     }
 

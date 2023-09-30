@@ -91,6 +91,58 @@ public class RenderUtils {
         return frustrum.isBoundingBoxInFrustum(bb);
     }
 
+
+    public static void drawCircle3D(double posX, double posY, double posZ, float radius, int color) {
+
+            double[] position = {
+                    posX - Minecraft.getMinecraft().getRenderManager().viewerPosX,
+                    posY - Minecraft.getMinecraft().getRenderManager().viewerPosY,
+                    posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ
+            };
+            GL11.glPushMatrix();
+            GlStateManager.enableBlend();
+            GlStateManager.disableCull();
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableAlpha();
+            GlStateManager.disableDepth();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glLineWidth(4);
+            GL11.glPushMatrix();
+
+            GlStateManager.translate(position[0], position[1], position[2]);
+
+            GL11.glBegin(2);
+            RenderUtils.glColor(color);
+
+            for(int i = 0; i <= 360; i++) {
+                GL11.glVertex3d(Math.sin(i * Math.PI / 180) * radius, 0, Math.cos(i * Math.PI / 180) * radius);
+            }
+            GL11.glEnd();
+            /*
+            GL11.glBegin(2);
+            for(int i = 0; i <= 360; i++) {
+                int[] colors = Client.instance.getClientColors((float) (i * 1.1f), 100);
+                RenderUtils.glColor(colors[0]);
+                GL11.glVertex3d(Math.sin(i * Math.PI / 180) * .3f * anim.getAnim2(), 0, Math.cos(i * Math.PI / 180) * .3f * anim.getAnim2());
+            }
+            GL11.glEnd();
+
+             */
+
+            GL11.glPopMatrix();
+            GlStateManager.enableAlpha();
+            GlStateManager.enableDepth();
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableCull();
+            GlStateManager.disableBlend();
+            GL11.glPopMatrix();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            RenderUtils.glColor(-1);
+            GL11.glLineWidth(1);
+
+    }
+
     public static void drawCircle(float x, float y, float radius, int color)
     {
         float f = (float)(color >> 24 & 255) / 255.0F;
@@ -226,6 +278,9 @@ public class RenderUtils {
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,GlStateManager.DestFactor.ZERO);
 
     }
+
+
+
 
     public static void drawFullGradientRectPro(float x, float y, float x2, float y2, int color, int color2, int color3, int color4,boolean blend) {
 
@@ -411,7 +466,7 @@ public class RenderUtils {
 
         GlStateManager.color(red, green, blue, alpha);
     }
-    public static void renderItem(ItemStack itemStack, int x, int y) {
+    public static void renderItem(ItemStack itemStack, float x, float y) {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.enableDepth();
@@ -422,7 +477,7 @@ public class RenderUtils {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         GlStateManager.disableDepth();
     }
-    public static void renderItemOver(ItemStack itemStack, int x, int y) {
+    public static void renderItemOver(ItemStack itemStack, float x, float y) {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.enableDepth();

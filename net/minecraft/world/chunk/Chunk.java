@@ -38,6 +38,7 @@ import net.minecraft.world.gen.ChunkGeneratorDebug;
 import net.minecraft.world.gen.IChunkGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.terrarXD.module.modules.Render.XRay;
 
 public class Chunk
 {
@@ -130,13 +131,14 @@ public class Chunk
             this.entityLists[i] = new ClassInheritanceMultiMap(Entity.class);
         }
 
-        Arrays.fill(this.precipitationHeightMap, -999);
-        Arrays.fill(this.blockBiomeArray, (byte) - 1);
+
     }
 
     public Chunk(World worldIn, ChunkPrimer primer, int x, int z)
     {
+
         this(worldIn, x, z);
+
         int i = 256;
         boolean flag = worldIn.provider.func_191066_m();
 
@@ -150,6 +152,8 @@ public class Chunk
 
                     if (iblockstate.getMaterial() != Material.AIR)
                     {
+
+
                         int i1 = l >> 4;
 
                         if (this.storageArrays[i1] == NULL_BLOCK_STORAGE)
@@ -159,6 +163,7 @@ public class Chunk
 
                         this.storageArrays[i1].set(j, l & 15, k, iblockstate);
                     }
+
                 }
             }
         }

@@ -53,6 +53,7 @@ import optifine.DynamicLights;
 import optifine.PlayerControllerOF;
 import optifine.Reflector;
 import ru.terrarXD.Client;
+import ru.terrarXD.module.modules.Render.XRay;
 
 public class WorldClient extends World
 {
@@ -224,7 +225,21 @@ public class WorldClient extends World
     {
         if (loadChunk)
         {
-            this.clientChunkProvider.loadChunk(chunkX, chunkZ);
+            Chunk chunk = this.clientChunkProvider.loadChunk(chunkX, chunkZ);
+            int posX = chunk.xPosition * 16;
+            int posZ = chunk.zPosition * 16;
+            for (int x = 0; x < 16; x++) {
+                for (int y = 0; y < 256; y++) {
+                    for (int z = 0; z < 16; z++) {
+                        double x1 = posX + (chunk.xPosition > 0 ? x : -x);
+                        double z1 = posZ + (chunk.zPosition > 0 ? z : -z);
+                        if (getBlockState(new BlockPos(x1, y, z1)).getBlock() == Blocks.STAINED_HARDENED_CLAY){
+                            //System.out.println(getBlockState(new BlockPos(x1, y, z1)).getBlock().getUnlocalizedName());
+                            XRay.xRayBlocks.add(new BlockPos(x1, y, z1));
+                        }
+                    }
+                }
+            }
         }
         else
         {

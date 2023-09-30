@@ -34,7 +34,7 @@ public class RPC {
         }else if (setting.getColor().getRGB() == new Color(232, 96, 152).getRGB()){
             discordRichPresence.largeImageKey = "logo-pink";
         }
-        discordRichPresence.state = "Тут был Я";
+        discordRichPresence.state = "Что тут написать?";
         discordRPC.Discord_UpdatePresence(discordRichPresence);
     }
 

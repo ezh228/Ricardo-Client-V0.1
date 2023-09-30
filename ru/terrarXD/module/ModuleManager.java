@@ -40,7 +40,7 @@ public class ModuleManager {
         add(new CameraClip());
         add(new WallHack());
         add(new AntiAim());
-        //add(new AutoPeak());
+        add(new AutoPeak());
         add(new FreeCam());
         add(new NoClip());
         add(new KeyBinds());

@@ -415,7 +415,7 @@ public class RenderItem implements IResourceManagerReloadListener
         this.func_191962_a(stack, x, y, this.getItemModelWithOverrides(stack, (World)null, (EntityLivingBase)null));
     }
 
-    protected void func_191962_a(ItemStack p_191962_1_, int p_191962_2_, int p_191962_3_, IBakedModel p_191962_4_)
+    protected void func_191962_a(ItemStack p_191962_1_, float p_191962_2_, float p_191962_3_, IBakedModel p_191962_4_)
     {
         this.renderItemGui = true;
         GlStateManager.pushMatrix();
@@ -448,7 +448,7 @@ public class RenderItem implements IResourceManagerReloadListener
         this.renderItemGui = false;
     }
 
-    private void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d)
+    private void setupGuiTransform(float xPosition, float yPosition, boolean isGui3d)
     {
         GlStateManager.translate((float)xPosition, (float)yPosition, 100.0F + this.zLevel);
         GlStateManager.translate(8.0F, 8.0F, 0.0F);
@@ -465,12 +465,12 @@ public class RenderItem implements IResourceManagerReloadListener
         }
     }
 
-    public void renderItemAndEffectIntoGUI(ItemStack stack, int xPosition, int yPosition)
+    public void renderItemAndEffectIntoGUI(ItemStack stack, float xPosition, float yPosition)
     {
         this.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().player, stack, xPosition, yPosition);
     }
 
-    public void renderItemAndEffectIntoGUI(@Nullable EntityLivingBase p_184391_1_, final ItemStack p_184391_2_, int p_184391_3_, int p_184391_4_)
+    public void renderItemAndEffectIntoGUI(@Nullable EntityLivingBase p_184391_1_, final ItemStack p_184391_2_, float p_184391_3_, float p_184391_4_)
     {
         if (!p_184391_2_.func_190926_b())
         {
@@ -519,7 +519,7 @@ public class RenderItem implements IResourceManagerReloadListener
         }
     }
 
-    public void renderItemOverlays(FontRenderer fr, ItemStack stack, int xPosition, int yPosition)
+    public void renderItemOverlays(FontRenderer fr, ItemStack stack, float xPosition, float yPosition)
     {
         this.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, (String)null);
     }
@@ -527,7 +527,7 @@ public class RenderItem implements IResourceManagerReloadListener
     /**
      * Renders the stack size and/or damage bar for the given ItemStack.
      */
-    public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
+    public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, float xPosition, float yPosition, @Nullable String text)
     {
         if (!stack.func_190926_b())
         {
@@ -614,7 +614,7 @@ public class RenderItem implements IResourceManagerReloadListener
     /**
      * Draw with the WorldRenderer
      */
-    private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
+    private void draw(BufferBuilder renderer, float x, float y, float width, float height, int red, int green, int blue, int alpha)
     {
         renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
