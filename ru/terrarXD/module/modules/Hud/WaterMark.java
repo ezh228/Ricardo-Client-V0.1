@@ -36,6 +36,12 @@ public class WaterMark extends HudModule {
 
     @EventTarget
     public void onRender2D(EventRender2D event){
+        /*
+        if (mc.player.onGround){
+            mc.player.jump();
+        }
+
+         */
         String text= Client.NAME_FULL+" "+Client.VERSION;
         setSizeX(Fonts.main_18.getStringWidth(text)+4);
         float x = getPosX();

@@ -1,5 +1,7 @@
 package ru.terrarXD.clickgui;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import ru.terrarXD.Client;
 import ru.terrarXD.module.Category;
 import ru.terrarXD.module.Module;
@@ -16,10 +18,12 @@ import java.util.ArrayList;
 public class Panel extends Comp{
     Category category;
     AnimationUtils animSelect;
+    AnimationUtils scroll;
     ArrayList<Mod> mods = new ArrayList<>();
     public Panel(Category category){
         this.category = category;
         animSelect = new AnimationUtils(0, 0, 0.1f);
+        scroll = new AnimationUtils(0, 0, 0.1f);
         for (Module module : Client.moduleManager.modules){
             if (module.getCategory() == category){
                 mods.add(new Mod(module));
@@ -86,9 +90,19 @@ public class Panel extends Comp{
 
 
     public void drawScreenMods(float x, float y, float mouseX, float mouseY){
-        float yMods = y+5;
-        float yMods2 = y+5;
+        int sc = Mouse.getDWheel();
+        //scroll.to = 0;
+        if (sc>0){
+            scroll.to+=7;
+        }else if (sc<0){
+            scroll.to-=7;
+
+        }
+        float yMods = y+5+scroll.getAnim();
+        float yMods2 = y+5+scroll.getAnim();
         boolean left = true;
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        RenderUtils.scissor(x, y+5, Client.clickGuiScreen.sizeX-120, Client.clickGuiScreen.sizeY-10);
         for (Mod mod : mods){
             mod.drawScreen(left? x : x+(Client.clickGuiScreen.sizeX-120-15)/2+5, left ? yMods : yMods2, mouseX, mouseY);
             if (left){
@@ -98,10 +112,12 @@ public class Panel extends Comp{
             }
             left=!left;
         }
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+
     }
     public void mouseClickedMods(float x, float y, float mouseX, float mouseY, int button){
-        float yMods = y+5;
-        float yMods2 = y+5;
+        float yMods = y+5+scroll.getAnim();
+        float yMods2 = y+5+scroll.getAnim();
         boolean left = true;
         for (Mod mod : mods){
             mod.mouseClicked(left? x : x+(Client.clickGuiScreen.sizeX-120-15)/2+5, left ? yMods : yMods2, mouseX, mouseY, button);

@@ -47,17 +47,14 @@ public class AntiAim extends Module {
     ArrayList<Packet> packets = new ArrayList<>();
     Vec3d pos = new Vec3d(0, 0, 0);
     ModeSetting mode;
-    BooleanSetting aimSync;
     public EntityPlayer player;
 
     public AntiAim() {
         super("AntiAim", Category.Combat);
         ArrayList<String> modes = new ArrayList<>();
         modes.add("FakeLag");
-        modes.add("Spin");
-        modes.add("Lelf-Right");
+
         add(mode = new ModeSetting("Mode", modes, "FakeLag"));
-        add(aimSync = (BooleanSetting) new BooleanSetting("Aim-Sync", true).setVisible(()->mode.getVal().equals("FakeLag")));
     }
 
     public void setMotion(double speed, float pseudoYaw, double aa, double po4) {
@@ -98,7 +95,7 @@ public class AntiAim extends Module {
     public void onUpdate(EventUpdate event){
         mc.player.noClip = true;
 
-        boolean can = aimSync.getVal() ? (Client.moduleManager.getModule("AimBot").isEnabled() ? !((AimBot)Client.moduleManager.getModule("AimBot")).work : true) : true;
+        boolean can = true;
         if (mode.getVal().equals("FakeLag") && can){
 
 
@@ -175,7 +172,7 @@ public class AntiAim extends Module {
 
     @EventTarget
     public void sendPacket(EventPacketSend event) {
-        boolean can = aimSync.getVal() ? (Client.moduleManager.getModule("AimBot").isEnabled() ? !((AimBot)Client.moduleManager.getModule("AimBot")).work : true) : true;
+        boolean can = true;
 
         if (mode.getVal().equals("FakeLag") && can) {
             if (mc.player != null && state == 1 && !(event.getPacket() instanceof CPacketAnimation)) {

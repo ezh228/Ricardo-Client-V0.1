@@ -60,6 +60,8 @@ public class Mod extends Comp{
         int color2 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.7d).getRGB());
         int color3 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.6d).getRGB());
         if (binding){
+            RenderUtils.drawRoundedRect(x, y, x+getWidth(), y+getHeight(),10,color);
+
             if (Keyboard.isKeyDown(Keyboard.getEventKey())){
                 if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
                     binding = false;

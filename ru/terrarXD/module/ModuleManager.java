@@ -30,11 +30,11 @@ public class ModuleManager {
         add(new XRay());
         add(new GuiWalk());
         add(new NoSlowDown());
-        add(new AimBot());
+        //add(new AimBot());
         add(new Proverka());
         add(new AutoMine());
         add(new CupBoardRender());
-        add(new Knife());
+        //add(new Knife());
         add(new DiscordRPC());
         add(new ExpInfo());
         add(new CameraClip());
@@ -47,6 +47,8 @@ public class ModuleManager {
         add(new StreamerMode());
         add(new NoHustCam());
         add(new Derp());
+        add(new newAimBot());
+        add(new FastPeak());
     }
 
     public void add(Module module){

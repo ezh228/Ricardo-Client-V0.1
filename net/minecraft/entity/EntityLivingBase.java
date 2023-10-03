@@ -74,6 +74,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.terrarXD.Client;
 
 public abstract class EntityLivingBase extends Entity
 {
@@ -864,6 +865,8 @@ public abstract class EntityLivingBase extends Entity
      */
     public void addPotionEffect(PotionEffect potioneffectIn)
     {
+
+
         if (this.isPotionApplicable(potioneffectIn))
         {
             PotionEffect potioneffect = this.activePotionsMap.get(potioneffectIn.getPotion());

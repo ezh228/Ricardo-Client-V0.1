@@ -1,5 +1,6 @@
 package ru.terrarXD.module.modules.Movement;
 
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import ru.terrarXD.module.Category;
 import ru.terrarXD.module.Module;
@@ -18,6 +19,8 @@ public class NoSlowDown extends Module {
 
     @EventTarget
     public void onUpdate(EventUpdate event){
+
+
         if(mc.player.isPotionActive(Potion.getPotionById(2))){
             if(mc.player.onGround){
                 Utils.setSpeed(0.22f);
@@ -26,6 +29,8 @@ public class NoSlowDown extends Module {
             }
 
         }
+
+
 
     }
 }

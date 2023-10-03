@@ -1,3 +1,4 @@
+
 package ru.terrarXD.module.modules.Combat;
 
 import net.minecraft.client.gui.GuiSleepMP;
@@ -32,6 +33,7 @@ import java.util.Comparator;
  * @author zTerrarxd_
  * @since 15:57 of 26.04.2023
  */
+/*
 public class AimBot extends Module {
     BooleanSetting bots;
     BooleanSetting silent;
@@ -202,7 +204,7 @@ public class AimBot extends Module {
             player = ((AntiAim)Client.moduleManager.getModule("AntiAim")).player;
         }
 
-         */
+
         for (Entity entity : entities) {
             if (entity instanceof EntityLivingBase && entity.getEntityId() != -7777 && !Client.friendsManager.isFriend(entity.getName()) && !entity.isInvisible()) {
                 if ((entity instanceof EntityZombie && bots.getVal()) || (entity instanceof EntityPlayer && entity != mc.player) && ((EntityLivingBase  ) entity).getHealth()> 0) {
@@ -229,3 +231,6 @@ public class AimBot extends Module {
 
 
 }
+
+ */
+
