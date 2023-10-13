@@ -2,7 +2,6 @@ package ru.terrarXD.clickgui.set;
 
 import ru.terrarXD.Client;
 import ru.terrarXD.shit.fonts.Fonts;
-import ru.terrarXD.shit.settings.BooleanSetting;
 import ru.terrarXD.shit.settings.ModeSetting;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.ColorUtils;

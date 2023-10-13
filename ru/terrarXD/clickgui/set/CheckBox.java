@@ -1,11 +1,8 @@
 package ru.terrarXD.clickgui.set;
 
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
 import ru.terrarXD.Client;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.BooleanSetting;
-import ru.terrarXD.shit.settings.Setting;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.ColorUtils;
 import ru.terrarXD.shit.utils.RenderUtils;

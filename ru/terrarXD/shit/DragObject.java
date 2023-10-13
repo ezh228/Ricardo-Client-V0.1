@@ -8,7 +8,7 @@ import ru.terrarXD.module.HudModule;
  * @since 21:49 of 22.04.2023
  */
 public class DragObject {
-    HudModule module;
+    public HudModule module;
     boolean draging = false;
 
     float dragX;
@@ -27,12 +27,13 @@ public class DragObject {
             module.setPosY(mouseY-dragY);
         }
     }
-    public void mouse(float mouseX, float mouseY, int buuton){
-        if (isHover(module.getPosX(), module.getPosY(), module.getPosX()+module.getSizeX(), module.getPosY()+module.getSizeY(), mouseX, mouseY) && buuton == 0){
+    public void drag(float mouseX, float mouseY, int buuton){
+        // Тут должна быть шутка про drug - наркотики, но её тут нет, живите с этим
+
             draging = true;
             dragX=mouseX-module.getPosX();
             dragY=mouseY-module.getPosY();
-        }
+
     }
 
     public void start(){

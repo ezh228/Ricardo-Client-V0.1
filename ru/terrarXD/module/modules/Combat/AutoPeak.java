@@ -16,7 +16,10 @@ import ru.terrarXD.shit.event.events.EventSwingArm;
 import ru.terrarXD.shit.event.events.EventUpdate;
 import ru.terrarXD.shit.settings.BooleanSetting;
 import ru.terrarXD.shit.settings.FloatSetting;
+import ru.terrarXD.shit.settings.ModeSetting;
 import ru.terrarXD.shit.utils.RenderUtils;
+
+import java.util.ArrayList;
 
 /**
  * @author zTerrarxd_
@@ -29,28 +32,44 @@ public class AutoPeak extends Module {
     boolean teleport = false;
 
     BooleanSetting timer;
+    ModeSetting mode;
     FloatSetting timerPower;
+    FloatSetting radius;
+
     public AutoPeak() {
         super("AutoPeak", Category.Combat);
         add(timer = new BooleanSetting("Timer", true));
         add(timerPower = (FloatSetting) new FloatSetting("Timer Power", 0, 2, 1.5f, 0.1f).setVisible(()->timer.getVal()));
+        ArrayList<String> modes = new ArrayList<>();
+        modes.add("Radius");
+        modes.add("Swing");
+        add(mode = new ModeSetting("Mode", modes, "Swing"));
+        add(radius = (FloatSetting) new FloatSetting("Radius", 0, 5, 1.5f, 0.1f).setVisible(()->mode.getVal().equals("Radius")));
+
     }
 
     @EventTarget
     public void onSwing(EventSwingArm event){
-        if (event.getHand() == EnumHand.MAIN_HAND){
-            teleport = true;
+        if (mode.getVal().equals("Swing")){
+            if (event.getHand() == EnumHand.MAIN_HAND){
+                teleport = true;
+            }
         }
+
     }
 
     @EventTarget
     public void render3D(EventRender3D event){
-        RenderUtils.drawCircle3D(pos.xCoord, pos.yCoord, pos.zCoord, 0.3f, Client.getColor());
+        RenderUtils.drawCircle3D(pos.xCoord, pos.yCoord, pos.zCoord, mode.getVal().equals("Radius") ? radius.getVal() : 0.3f, Client.getColor());
     }
 
 
     @EventTarget
     public void onUpdate(EventUpdate event){
+
+        if (mc.player.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) > radius.getVal() && mode.getVal().equals("Radius")){
+            teleport = true;
+        }
         if (teleport){
             if (timer.getVal()){
                 mc.timer.field_194147_b = timerPower.getVal();

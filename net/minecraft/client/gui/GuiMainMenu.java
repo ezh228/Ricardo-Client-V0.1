@@ -56,6 +56,8 @@ public class GuiMainMenu extends GuiScreen
     AnimationUtils yAnim = new AnimationUtils(0, 0, 0.01f);
     AnimationUtils alphaAnim = new AnimationUtils(0, 0, 0.01f);
 
+
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RANDOM = new Random();
 
@@ -308,6 +310,7 @@ public class GuiMainMenu extends GuiScreen
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")).setNewStyle());
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")).setNewStyle());
         this.buttonList.add(new GuiButton(60, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "AltManager").setNewStyle());
+        this.buttonList.add(new GuiButton(777, this.width / 2 - 100, height-30, "Shaders").setNewStyle());
 
         if (Reflector.GuiModList_Constructor.exists())
         {
@@ -342,6 +345,10 @@ public class GuiMainMenu extends GuiScreen
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        if (button.id == 777){
+            Client.SHADER = !Client.SHADER;
+        }
+        System.out.println(Client.SHADER);
         if (button.id == 0)
         {
             this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
@@ -404,6 +411,7 @@ public class GuiMainMenu extends GuiScreen
 
     public void confirmClicked(boolean result, int id)
     {
+
         if (result && id == 12)
         {
             ISaveFormat isaveformat = this.mc.getSaveLoader();

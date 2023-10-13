@@ -184,10 +184,18 @@ public class GuiChat extends GuiScreen implements ITabCompleter
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
+
+    public boolean isHover(float x, float y, float x2, float y2, float mouseX, float mouseY){
+        return mouseX>x && mouseX < x2 && mouseY>y && mouseY<y2;
+    }
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
+        boolean dr = false;
         for (DragObject dragObject : dragObjects){
-            dragObject.mouse(mouseX, mouseY, mouseButton);
+            if (!dr && isHover(dragObject.module.getPosX(), dragObject.module.getPosY(), dragObject.module.getPosX()+dragObject.module.getSizeX(), dragObject.module.getPosY()+dragObject.module.getSizeY(), mouseX, mouseY) && mouseButton == 0){
+                dragObject.drag(mouseX, mouseY, mouseButton);
+                dr = true;
+            }
         }
         if (mouseButton == 0)
         {

@@ -43,6 +43,9 @@ public class WaterMark extends HudModule {
 
          */
         String text= Client.NAME_FULL+" "+Client.VERSION;
+        if (!Client.actual){
+            text+=" устаревшая версия";
+        }
         setSizeX(Fonts.main_18.getStringWidth(text)+4);
         float x = getPosX();
         float y = getPosY();
@@ -53,7 +56,7 @@ public class WaterMark extends HudModule {
         }
         Fonts.main_18.drawString(Client.NAME_FULL.substring(0,1), x+2, y+7.5f-(Fonts.main_18.getHeight()/2), Client.getColor());
 
-        Fonts.main_18.drawString(Client.NAME_FULL.substring(1, Client.NAME_FULL.length())+" "+Client.VERSION, x+8, y+7.5f-(Fonts.main_18.getHeight()/2), -1);
+        Fonts.main_18.drawString(Client.NAME_FULL.substring(1, Client.NAME_FULL.length())+" "+Client.VERSION + (Client.actual ? "" : " устаревшая версия"), x+8, y+7.5f-(Fonts.main_18.getHeight()/2), -1);
         Fonts.main_18.drawString("by zTerrarxd_", x+2, y+10+7.5f-(Fonts.main_18.getHeight()/2), -1);
 
     }

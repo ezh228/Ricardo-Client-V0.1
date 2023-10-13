@@ -1,9 +1,6 @@
 package ru.terrarXD.module.modules.Hud;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
 import org.lwjgl.opengl.GL11;
 import ru.terrarXD.Client;
 import ru.terrarXD.module.Category;

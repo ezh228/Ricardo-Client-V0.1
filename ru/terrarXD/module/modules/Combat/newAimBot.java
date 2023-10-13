@@ -207,7 +207,7 @@ public class newAimBot extends Module {
             }.start();
             long time = System.currentTimeMillis();
             while (ready[0] != 4){
-                if (System.currentTimeMillis()- time > 10){
+                if (System.currentTimeMillis()- time > 50){
                     System.out.println("stop");
                     break;
                 }
@@ -234,7 +234,7 @@ public class newAimBot extends Module {
         ArrayList<TargetResult> targetResults = new ArrayList<>();
         for (Entity entity : mc.world.loadedEntityList){
             if (entity instanceof EntityLivingBase && mc.player != entity && !entity.isInvisible()) {
-                if (Utils.fov(entity, fov.getVal()) && !Client.friendsManager.isFriend(entity.getName())) {
+                if (Utils.fov(entity, fov.getVal()) && !Client.friendsManager.isFriend(entity.getName()) && entity.getEntityId() != -7777) {
                     if (entity instanceof EntityPlayer){
                         Vec3d vec3d = getMultipointPos((EntityLivingBase) entity, predict);
                         if (vec3d!=null){

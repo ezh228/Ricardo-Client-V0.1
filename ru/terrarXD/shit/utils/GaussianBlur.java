@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
+import ru.terrarXD.Client;
 
 
 public class GaussianBlur {
@@ -92,30 +93,33 @@ public class GaussianBlur {
     }
 
     public static void renderBlur(float radius, Runnable run) {
-        update(framebuffer1);
-        framebuffer1.framebufferClear();
-        framebuffer1.bindFramebuffer(true);
-        run.run();
-        framebuffer1.unbindFramebuffer();
-        mc.getFramebuffer().bindFramebuffer(true);
-
-        if (framebuffer1 != null) {
-            GL11.glPushMatrix();
-            GlStateManager.enableAlpha();
-            GlStateManager.alphaFunc(516, 0.0f);
-            GlStateManager.enableBlend();
-            OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-
+        if (Client.SHADER){
+            update(framebuffer1);
+            framebuffer1.framebufferClear();
+            framebuffer1.bindFramebuffer(true);
+            run.run();
+            framebuffer1.unbindFramebuffer();
             mc.getFramebuffer().bindFramebuffer(true);
-            ShaderUtility.bindTexture(framebuffer1.framebufferTexture);
-            drawBlur(radius, ShaderUtility::drawQuads);
-            mc.getFramebuffer().bindFramebuffer(false);
+
+            if (framebuffer1 != null) {
+                GL11.glPushMatrix();
+                GlStateManager.enableAlpha();
+                GlStateManager.alphaFunc(516, 0.0f);
+                GlStateManager.enableBlend();
+                OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+
+                mc.getFramebuffer().bindFramebuffer(true);
+                ShaderUtility.bindTexture(framebuffer1.framebufferTexture);
+                drawBlur(radius, ShaderUtility::drawQuads);
+                mc.getFramebuffer().bindFramebuffer(false);
 
 
-            GlStateManager.disableAlpha();
-            GL11.glPopMatrix();
+                GlStateManager.disableAlpha();
+                GL11.glPopMatrix();
 
+            }
         }
+
 
     }
 

@@ -12,7 +12,6 @@ import ru.terrarXD.shit.settings.*;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.ColorUtils;
 import ru.terrarXD.shit.utils.RenderUtils;
-import ru.terrarXD.shit.utils.StencilUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -95,9 +94,9 @@ public class Mod extends Comp{
         //Sets
 
 
-        StencilUtil.initStencilToWrite();
-        RenderUtils.drawRoundedRect(x, y+20, x+getWidth(), y+getHeight(),10,color);
-        StencilUtil.readStencilBuffer(1);
+        //StencilUtil.initStencilToWrite();
+        //RenderUtils.drawRoundedRect(x, y+20, x+getWidth(), y+getHeight(),10,color);
+        //StencilUtil.readStencilBuffer(1);
         float ySets = y+ 20;
         float size = 20;
 
@@ -121,7 +120,7 @@ public class Mod extends Comp{
 
 
 
-        StencilUtil.uninitStencilBuffer();
+        //StencilUtil.uninitStencilBuffer();
     }
     public int getColor(int color){
         return ColorUtils.swapAlpha(color, (int) ((new Color(color).getAlpha() * anim.getAnim())/255));
