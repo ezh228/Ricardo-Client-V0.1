@@ -32,8 +32,11 @@ public class newAimBot extends Module {
     int ticks = 0;
 
     BooleanSetting autoShoot;
+    FloatSetting cps;
+    BooleanSetting checkCoolDown;
 
     FloatSetting fov;
+    BooleanSetting autoPredict;
     FloatSetting predict;
 
     TimerUtils timer;
@@ -42,8 +45,11 @@ public class newAimBot extends Module {
         add(silent = new BooleanSetting("Silent", true));
         add(multipoint = new BooleanSetting("MultiPoint", true));
         add(fov = new FloatSetting("Fov", 0, 360, 100, 1));
-        add(predict = new FloatSetting("Predict", 0, 10, 5.5f, 0.01f));
+        add(autoPredict = new BooleanSetting("AutoPredict", true));
+        add(predict = (FloatSetting) new FloatSetting("Predict", 0, 10, 5.5f, 0.01f).setVisible(()-> !autoPredict.getVal()));
         add(autoShoot = new BooleanSetting("AutoShoot", true));
+        add(checkCoolDown = (BooleanSetting) new BooleanSetting("CheckCoolDown", false).setVisible(()->autoShoot.getVal()));
+        add(cps = (FloatSetting) new FloatSetting("CPS", 0, 20, 15, 1f).setVisible(()->autoShoot.getVal()));
         timer = new TimerUtils();
     }
 
@@ -63,8 +69,8 @@ public class newAimBot extends Module {
         ticks++;
 
         aim(target, event);
-        if (autoShoot.getVal() && ticks > 3){
-            if (timer.hasReached((long) (1000l*0.05289941f))){
+        if (autoShoot.getVal() && ticks > 1){
+            if (timer.hasReached((long) (1000l / cps.getVal()))){
                 shoot(target.getTarget());
             }
         }
@@ -97,7 +103,7 @@ public class newAimBot extends Module {
 
 
     public void  shoot(EntityLivingBase target){
-        if (mc.player.getCooldownTracker().getCooldown(mc.player.inventory.getCurrentItem().getItem(), mc.getRenderPartialTicks()) == 0){
+        if ((checkCoolDown.getVal() && mc.player.getCooldownTracker().getCooldown(mc.player.inventory.getCurrentItem().getItem(), mc.getRenderPartialTicks()) == 0) || !checkCoolDown.getVal()){
             mc.playerController.clickBlock(new BlockPos(mc.player.posX, mc.player.posY + 1, mc.player.posZ), EnumFacing.UP);
             mc.player.swingArm(EnumHand.MAIN_HAND);
             timer.reset();
@@ -106,8 +112,9 @@ public class newAimBot extends Module {
     }
 
     public void aim(TargetResult target, EventUpdate event){
+        float pred = (mc.getConnection().getPlayerInfo(this.mc.player.getUniqueID()).getResponseTime()) / 20f;
 
-        float[] rotations = getAim(target, predict.getVal());
+        float[] rotations = getAim(target, autoPredict.getVal() ? pred : predict.getVal());
         if (silent.getVal()){
             event.setRotationYaw(rotations[0]);
             event.setRotationPitch(rotations[1]);
@@ -208,10 +215,10 @@ public class newAimBot extends Module {
             long time = System.currentTimeMillis();
             while (ready[0] != 4){
                 if (System.currentTimeMillis()- time > 50){
-                    System.out.println("stop");
+                    //System.out.println("stop");
                     break;
                 }
-                System.out.println(ready[0]);
+                //System.out.println(ready[0]);
             }
             if (vec3ds.size()>0){
                 vec3ds.sort(new Comparator<Vec3d>() {

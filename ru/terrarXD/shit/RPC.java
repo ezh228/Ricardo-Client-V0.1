@@ -34,7 +34,7 @@ public class RPC {
         }else if (setting.getColor().getRGB() == new Color(232, 96, 152).getRGB()){
             discordRichPresence.largeImageKey = "logo-pink";
         }
-        discordRichPresence.state = "Z";
+        discordRichPresence.state = "Тут могла быть ваша реклама";
         discordRPC.Discord_UpdatePresence(discordRichPresence);
     }
 
@@ -52,7 +52,7 @@ public class RPC {
         discordRichPresence.largeImageText = Client.NAME_FULL+" "+Client.VERSION;
         discordRichPresence.joinSecret = "JrfqTXi5CeseEvVafGGkPOFmEVbWZuhN";
 
-        discordRichPresence.state = "релиз версия";
+        discordRichPresence.state = "Тут могла быть ваша реклама";
         discordRPC.Discord_UpdatePresence(discordRichPresence);
     }
 

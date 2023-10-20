@@ -30,7 +30,7 @@ public class Client {
     public static final String NAME = "Ricardo";
     public static final String NAME_FULL = "Ricardo Client";
     public static ConfigManager configManager;
-    public static final String VERSION = "V0.4";
+    public static final String VERSION = "V0.5.1";
     public static ModuleManager moduleManager;
     public static EventManager eventManager;
     public static ClickGuiScreen clickGuiScreen;

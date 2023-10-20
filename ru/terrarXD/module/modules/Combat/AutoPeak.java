@@ -81,7 +81,9 @@ public class AutoPeak extends Module {
             }
 
             if (distance <= 0.3f){
-                setEnabled(false);
+                //setEnabled(false);
+                //pos = new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ);
+                teleport = false;
             }
         }
 

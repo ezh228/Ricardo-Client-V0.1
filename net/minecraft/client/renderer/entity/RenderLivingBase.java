@@ -100,6 +100,7 @@ public abstract class RenderLivingBase<T extends EntityLivingBase> extends Rende
 
             GlStateManager.pushMatrix();
             GlStateManager.disableCull();
+            //GlStateManager.scale(1.5f, 0.5f, 1.5f);
             this.mainModel.swingProgress = this.getSwingProgress(entity, partialTicks);
             this.mainModel.isRiding = entity.isRiding();
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class ModuleManager {
     public ArrayList<Module> modules = new ArrayList<>();
     public ModuleManager(){
+
         add(new WaterMark());
         add(new ClickGui());
         add(new ModuleList());
@@ -49,6 +50,7 @@ public class ModuleManager {
         add(new Derp());
         add(new newAimBot());
         add(new FastPeak());
+        add(new ViewModel());
     }
 
     public void add(Module module){

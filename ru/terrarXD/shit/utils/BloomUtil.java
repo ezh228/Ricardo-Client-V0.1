@@ -19,6 +19,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
+import ru.terrarXD.Client;
 
 
 public class BloomUtil implements Utility {
@@ -36,6 +37,9 @@ public class BloomUtil implements Utility {
 
     static Framebuffer framebuffer1 = ShaderUtility.createFrameBuffer(new Framebuffer(1, 1, false));
     public static void renderBlur(List<Runnable> run) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer1);
         framebuffer1.framebufferClear();
         framebuffer1.bindFramebuffer(true);
@@ -46,6 +50,9 @@ public class BloomUtil implements Utility {
 
     }
     public static void renderShadow(List<Runnable> run,int color,int radius,int offset,float des,boolean fill) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer1);
         framebuffer1.framebufferClear();
         framebuffer1.bindFramebuffer(true);
@@ -56,6 +63,9 @@ public class BloomUtil implements Utility {
 
     }
     public static void renderShadow(Runnable run,int color,int radius,int offset,float des,boolean fill) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer1);
         framebuffer1.framebufferClear();
         framebuffer1.bindFramebuffer(true);
@@ -66,6 +76,9 @@ public class BloomUtil implements Utility {
 
     }
     public static void renderBlur(Runnable run) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer1);
         framebuffer1.framebufferClear();
         framebuffer1.bindFramebuffer(true);
@@ -76,6 +89,9 @@ public class BloomUtil implements Utility {
     }
 
     public static void renderBlur(Runnable run, int radius, int offset, int color, boolean fill) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer1);
         framebuffer1.framebufferClear();
         framebuffer1.bindFramebuffer(true);
@@ -86,6 +102,9 @@ public class BloomUtil implements Utility {
     }
 
     public static void renderBlur(Runnable run, int radius, int offset, int color, boolean fill, Framebuffer framebuffer) {
+        if (!Client.SHADER){
+            return;
+        }
         update(framebuffer);
         framebuffer.framebufferClear();
         framebuffer.bindFramebuffer(true);
@@ -96,6 +115,9 @@ public class BloomUtil implements Utility {
     }
 
     public static void renderBlur(int sourceTexture, int radius, int offset, int c, float des, boolean fill) {
+        if (!Client.SHADER){
+            return;
+        }
         framebuffer = ShaderUtility.createFrameBuffer(BloomUtil.framebuffer);
         GlStateManager.pushMatrix();
         GlStateManager.enableAlpha();
@@ -139,6 +161,7 @@ public class BloomUtil implements Utility {
     }
 
     public static void setAlphaLimit(float limit) {
+
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(GL_GREATER, (float) (limit * .01));
     }

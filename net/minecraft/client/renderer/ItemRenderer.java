@@ -33,6 +33,7 @@ import optifine.Config;
 import optifine.DynamicLights;
 import optifine.Reflector;
 import optifine.ReflectorForge;
+import ru.terrarXD.shit.event.events.EventTransformEatFirstPerson;
 import shadersmod.client.Shaders;
 
 public class ItemRenderer
@@ -281,6 +282,7 @@ public class ItemRenderer
 
     private void transformEatFirstPerson(float p_187454_1_, EnumHandSide p_187454_2_, ItemStack p_187454_3_)
     {
+
         float f = (float)this.mc.player.getItemInUseCount() - p_187454_1_ + 1.0F;
         float f1 = f / (float)p_187454_3_.getMaxItemUseDuration();
 
@@ -296,6 +298,7 @@ public class ItemRenderer
         GlStateManager.rotate((float)i * f3 * 90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f3 * 10.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate((float)i * f3 * 30.0F, 0.0F, 0.0F, 1.0F);
+
     }
 
     private void transformFirstPerson(EnumHandSide p_187453_1_, float p_187453_2_)
@@ -312,6 +315,11 @@ public class ItemRenderer
     private void transformSideFirstPerson(EnumHandSide p_187459_1_, float p_187459_2_)
     {
         int i = p_187459_1_ == EnumHandSide.RIGHT ? 1 : -1;
+        EventTransformEatFirstPerson event = new EventTransformEatFirstPerson(p_187459_1_);
+        event.call();
+        if (event.isCancelled()){
+            return;
+        }
         GlStateManager.translate((float)i * 0.56F, -0.52F + p_187459_2_ * -0.6F, -0.72F);
     }
 

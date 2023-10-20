@@ -91,10 +91,10 @@ public class ExpInfo extends HudModule {
 
             if (mc.player.getDistanceSq(packet.getX(), packet.getY(), packet.getZ()) > 5) {
 
-                System.out.println("NO " +packet.getSoundName());
+                //System.out.println("NO " +packet.getSoundName());
 
                 if (((packet.getSoundName().contains("shoot") || packet.getSoundName().contains("explosion") || (packet.getSoundName().contains("separate") && packet.getSoundName().contains("grenade_launcher"))) && !packet.getSoundName().contains("prepare"))&&!packet.getSoundName().contains("fail") &&!packet.getSoundName().contains("rocket_launcher") ) {
-                    System.out.println(packet.getSoundName());
+                    //System.out.println(packet.getSoundName());
                     if (exes.size() > 0) {
                         boolean g = true;
                         for (Ex ex : exes) {
