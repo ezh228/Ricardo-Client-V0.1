@@ -51,6 +51,8 @@ public class ModuleManager {
         add(new newAimBot());
         add(new FastPeak());
         add(new ViewModel());
+        add(new Notifications());
+        //add(new Fly());
     }
 
     public void add(Module module){

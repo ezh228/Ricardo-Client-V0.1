@@ -7,7 +7,9 @@ import net.minecraft.client.audio.Sound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import ru.terrarXD.Client;
+import ru.terrarXD.module.modules.Hud.Notifications;
 import ru.terrarXD.shit.settings.Setting;
 
 import java.util.ArrayList;
@@ -80,12 +82,20 @@ public class Module {
     }
 
     public void onEnable(){
+        if (Client.moduleManager != null){
+            ((Notifications) Client.moduleManager.getModule("Notifications")).displayNotif(new Notifications.Notif(name, "был " + TextFormatting.GREEN +"включён"));
+
+        }
 
         Client.eventManager.register(this);
 
     }
 
     public void onDisable(){
+        if (Client.moduleManager != null){
+            ((Notifications) Client.moduleManager.getModule("Notifications")).displayNotif(new Notifications.Notif(name, "был " + TextFormatting.RED +"выключен"));
+        }
+
         Client.eventManager.unregister(this);
 
     }

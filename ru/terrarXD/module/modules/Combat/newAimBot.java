@@ -3,6 +3,7 @@ package ru.terrarXD.module.modules.Combat;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -29,6 +30,8 @@ public class newAimBot extends Module {
     public static boolean work = false;
     BooleanSetting silent;
     BooleanSetting multipoint;
+
+    BooleanSetting bots;
     int ticks = 0;
 
     BooleanSetting autoShoot;
@@ -42,6 +45,7 @@ public class newAimBot extends Module {
     TimerUtils timer;
     public newAimBot() {
         super("AimBot", Category.Combat);
+        add(bots = new BooleanSetting("Bots", false));
         add(silent = new BooleanSetting("Silent", true));
         add(multipoint = new BooleanSetting("MultiPoint", true));
         add(fov = new FloatSetting("Fov", 0, 360, 100, 1));
@@ -242,7 +246,7 @@ public class newAimBot extends Module {
         for (Entity entity : mc.world.loadedEntityList){
             if (entity instanceof EntityLivingBase && mc.player != entity && !entity.isInvisible()) {
                 if (Utils.fov(entity, fov.getVal()) && !Client.friendsManager.isFriend(entity.getName()) && entity.getEntityId() != -7777) {
-                    if (entity instanceof EntityPlayer){
+                    if ((bots.getVal() && (entity instanceof EntityPlayer || entity instanceof EntityZombie)) || (entity instanceof EntityPlayer && !bots.getVal())){
                         Vec3d vec3d = getMultipointPos((EntityLivingBase) entity, predict);
                         if (vec3d!=null){
                             targetResults.add(new TargetResult((EntityLivingBase) entity, vec3d));

@@ -82,10 +82,7 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import ru.terrarXD.Client;
 import ru.terrarXD.module.modules.Combat.AntiAim;
-import ru.terrarXD.shit.event.events.EventPostUpdate;
-import ru.terrarXD.shit.event.events.EventPush;
-import ru.terrarXD.shit.event.events.EventSwingArm;
-import ru.terrarXD.shit.event.events.EventUpdate;
+import ru.terrarXD.shit.event.events.*;
 
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -1198,6 +1195,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void moveEntity(MoverType x, double p_70091_2_, double p_70091_4_, double p_70091_6_)
     {
+        MoveEvent event = new MoveEvent( p_70091_2_, p_70091_4_, p_70091_6_);
+        event.call();
+        if (event.isCancelled()){
+            return;
+        }
         double d0 = this.posX;
         double d1 = this.posZ;
         super.moveEntity(x, p_70091_2_, p_70091_4_, p_70091_6_);

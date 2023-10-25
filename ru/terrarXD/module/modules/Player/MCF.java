@@ -13,7 +13,7 @@ import ru.terrarXD.shit.event.events.EventUpdate;
  * @since 15:50 of 08.06.2023
  */
 public class MCF extends Module {
-    public boolean onFriend = true;
+        public boolean onFriend = true;
 
     public MCF() {
         super("MCF", Category.Player);
