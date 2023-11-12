@@ -9,13 +9,13 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 
 public class SPacketPlayerPosLook implements Packet<INetHandlerPlayClient>
 {
-    private double x;
-    private double y;
-    private double z;
-    private float yaw;
-    private float pitch;
-    private Set<SPacketPlayerPosLook.EnumFlags> flags;
-    private int teleportId;
+    public double x;
+    public double y;
+    public double z;
+    public float yaw;
+    public float pitch;
+    public Set<SPacketPlayerPosLook.EnumFlags> flags;
+    public int teleportId;
 
     public SPacketPlayerPosLook()
     {

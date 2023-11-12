@@ -30,7 +30,7 @@ public class ClickGui extends Module {
     public ClickGui() {
         super("ClickGui", Category.Hud);
         setKey(Keyboard.KEY_RSHIFT);
-        add(color = new ColorSetting("Color", new Color(47, 122, 229)));
+        add(color = new ColorSetting("Color", new Color(5, 134, 105)));
         add(blur = new BooleanSetting("Blur", true));
         add(blurradius = (FloatSetting) new FloatSetting("Blur-Radius",1, 25, 10, 1f).setVisible(()->blur.getVal()));
 

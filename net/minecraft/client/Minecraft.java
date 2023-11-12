@@ -823,6 +823,7 @@ public class Minecraft implements IThreadListener, ISnooperInfo
      */
     public void displayCrashReport(CrashReport crashReportIn)
     {
+        /*
         File file1 = new File(getMinecraft().mcDataDir, "crash-reports");
         File file2 = new File(file1, "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-client.txt");
         Bootstrap.printToSYSOUT(crashReportIn.getCompleteReport());
@@ -842,6 +843,10 @@ public class Minecraft implements IThreadListener, ISnooperInfo
             Bootstrap.printToSYSOUT("#@?@# Game crashed! Crash report could not be saved. #@?@#");
             System.exit(-2);
         }
+
+
+         */
+
     }
 
     public boolean isUnicode()
@@ -1635,7 +1640,7 @@ public class Minecraft implements IThreadListener, ISnooperInfo
     /**
      * Called when user clicked he's mouse right button (place)
      */
-    private void rightClickMouse()
+    public void rightClickMouse()
     {
         if (!this.playerController.getIsHittingBlock())
         {

@@ -6,7 +6,9 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import java.awt.*;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +40,14 @@ public class Utils {
             }
             mc.player.motionX = forward * speed * Math.cos(Math.toRadians(yaw + 90.0f)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0f));
             mc.player.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0f)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0f));
+        }
+    }
+
+    public static void openWebpage(String urlString) {
+        try {
+            Desktop.getDesktop().browse(new URL(urlString).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     public static double fovFromEntity(Entity en) {

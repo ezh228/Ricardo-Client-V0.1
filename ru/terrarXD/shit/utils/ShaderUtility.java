@@ -25,7 +25,7 @@ public class ShaderUtility {
     public ShaderUtility(String fragmentShaderLoc, String vertexShaderLoc) {
         int program = glCreateProgram();
         try {
-
+            /*
             int fragmentShaderID = switch (fragmentShaderLoc) {
                 case "roundedRect", "rounded" ->
                         createShader(new ByteArrayInputStream(roundedRect.getBytes()), GL_FRAGMENT_SHADER);
@@ -40,7 +40,10 @@ public class ShaderUtility {
             };
 
 
-            /*
+             */
+
+
+
             int fragmentShaderID = 0;
             if (fragmentShaderLoc.equals("roundedRect") || fragmentShaderLoc.equals("rounded")){
                 fragmentShaderID = createShader(new ByteArrayInputStream(roundedRect.getBytes()), GL_FRAGMENT_SHADER);
@@ -54,7 +57,7 @@ public class ShaderUtility {
                 fragmentShaderID = createShader(mc.getResourceManager().getResource(new ResourceLocation(fragmentShaderLoc)).getInputStream(), GL_FRAGMENT_SHADER);
             }
 
-             */
+
             glAttachShader(program, fragmentShaderID);
 
 
@@ -108,7 +111,7 @@ public class ShaderUtility {
     public void setUniformf(String name, float... args) {
         int loc = glGetUniformLocation(programID, name);
         //System.out.println(args.length);
-        /*
+
         if (args.length == 1){
             glUniform1f(loc, args[0]);
         }else if (args.length == 2){
@@ -120,14 +123,16 @@ public class ShaderUtility {
         }
 
 
-         */
 
+        /*
         switch (args.length) {
             case 1 -> glUniform1f(loc, args[0]);
             case 2 -> glUniform2f(loc, args[0], args[1]);
             case 3 -> glUniform3f(loc, args[0], args[1], args[2]);
             case 4 -> glUniform4f(loc, args[0], args[1], args[2], args[3]);
         }
+
+         */
 
 
     }

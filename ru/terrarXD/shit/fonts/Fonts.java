@@ -34,22 +34,15 @@ public class Fonts
 
 
 
-    public static CFontRenderer arial_12 = new CFontRenderer(getFontTTF("arial", 12), true, true);
-    public static CFontRenderer arial_13 = new CFontRenderer(getFontTTF("arial", 13), true, true);
-    public static CFontRenderer arial_14 = new CFontRenderer(getFontTTF("arial", 14), true, true);
-    public static CFontRenderer arial_15 = new CFontRenderer(getFontTTF("arial", 15), true, true);
-    public static CFontRenderer arial_16 = new CFontRenderer(getFontTTF("arial", 16), true, true);
-    public static CFontRenderer arial_17 = new CFontRenderer(getFontTTF("arial", 17), true, true);
-    public static CFontRenderer arial_18 = new CFontRenderer(getFontTTF("arial", 18), true, true);
-    public static CFontRenderer arial_19 = new CFontRenderer(getFontTTF("arial", 19), true, true);
-    public static CFontRenderer arial_20 = new CFontRenderer(getFontTTF("arial", 20), true, true);
-    public static CFontRenderer arial_21 = new CFontRenderer(getFontTTF("arial", 21), true, true);
-    public static CFontRenderer arial_22 = new CFontRenderer(getFontTTF("arial", 22), true, true);
-    public static CFontRenderer arial_23 = new CFontRenderer(getFontTTF("arial", 23), true, true);
-    public static CFontRenderer arial_24 = new CFontRenderer(getFontTTF("arial", 24), true, true);
-    public static CFontRenderer arial_25 = new CFontRenderer(getFontTTF("arial", 25), true, true);
 
-    public static CFontRenderer arial_36 = new CFontRenderer(getFontTTF("arial", 48), true, true);
+    public static CFontRenderer icons_12 = new CFontRenderer(getFontTTF("stylesicons", 12), true, true);
+    public static CFontRenderer icons_13 = new CFontRenderer(getFontTTF("stylesicons", 13), true, true);
+    public static CFontRenderer icons_14 = new CFontRenderer(getFontTTF("stylesicons", 14), true, true);
+    public static CFontRenderer icons_15 = new CFontRenderer(getFontTTF("stylesicons", 15), true, true);
+    public static CFontRenderer icons_16 = new CFontRenderer(getFontTTF("stylesicons", 16), true, true);
+    public static CFontRenderer icons_17 = new CFontRenderer(getFontTTF("stylesicons", 17), true, true);
+    public static CFontRenderer icons_18 = new CFontRenderer(getFontTTF("stylesicons", 18), true, true);
+
     public static Font getFontTTF(String name, int size)
     {
         Font font;

@@ -1,5 +1,5 @@
-package ru.terrarXD.clickgui.set;
-
+package ru.terrarXD.clickgui.sets;
+import net.minecraft.client.renderer.GlStateManager;
 import ru.terrarXD.Client;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.ModeSetting;
@@ -9,10 +9,9 @@ import ru.terrarXD.shit.utils.RenderUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
-
 /**
  * @author zTerrarxd_
- * @since 13:57 of 30.05.2023
+ * @date 07.11.2023 20:59
  */
 public class ComboBox extends Set{
     ArrayList<Mode> modes = new ArrayList<>();
@@ -29,10 +28,9 @@ public class ComboBox extends Set{
     public void drawScreen(float x, float y, float mouseX, float mouseY) {
         super.drawScreen(x, y, mouseX, mouseY);
         ModeSetting setting = (ModeSetting) getSetting();
-
-        int color2 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.7d).getRGB());
-        int color3 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.6d).getRGB());
-        Fonts.main_18.drawString(setting.getName(), x+5, y+getHeight()/2-Fonts.main_18.getHeight()/2, getColor(isHover(x,y, x+getWidth(), y+getHeight(), mouseX, mouseY) ? -1 : new Color(200, 200, 200).getRGB()));
+        y+=3.5f;
+        int color2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.7d).getRGB();
+        int color3 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.6d).getRGB();
         int max = 1;
         float size = 0;
         float nowSize = 0;
@@ -59,10 +57,10 @@ public class ComboBox extends Set{
         float pp =posX+7+5+max/2-(modes.size()*4)+4;
         for (Mode mode : modes){
             yz+=mode.render(posX+7-anim.getAnim()+yz+(max-Fonts.main_16.getStringWidth(setting.getVal()))/2, y+getHeight()/2-Fonts.main_16.getHeight()/2, mouseX, mouseY, x, y)+5;
-            RenderUtils.drawCircle(pp, y+getHeight()/2+Fonts.main_16.getHeight()/2+2, 1.5f, mode.name.equals(setting.getVal()) ? Client.clickGuiScreen.getColor() : new Color(200, 200, 200).getRGB());
+            RenderUtils.drawCircle(pp, y+getHeight()/2+Fonts.main_16.getHeight()/2+2, 1.5f, mode.name.equals(setting.getVal()) ? Client.getColor() : new Color(200, 200, 200).getRGB());
             pp+=4;
         }
-
+        GlStateManager.resetColor();
 
 
     }
@@ -116,7 +114,7 @@ public class ComboBox extends Set{
         public float render(float x, float y, float mouseX, float mouseY, float globX, float globY){
             animAlpha.to = name.equals(((ModeSetting)setting).getVal()) ? 255 : 0;
             if (animAlpha.getAnim() >= 50){
-                Fonts.main_16.drawString(name, (double) x, y, ColorUtils.swapAlpha(getColor(isHover(globX,globY, globX+getWidth(), globY+getHeight(), mouseX, mouseY) ? -1 : new Color(200, 200, 200).getRGB()), (int) animAlpha.getAnim()));
+                Fonts.main_16.drawString(name, (double) x, y, ColorUtils.swapAlpha(-1, (int) animAlpha.getAnim()));
 
             }
             return Fonts.main_16.getStringWidth(name);

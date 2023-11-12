@@ -1,4 +1,3 @@
-
 package ru.terrarXD.module.modules.Combat;
 
 import net.minecraft.client.gui.GuiSleepMP;
@@ -6,11 +5,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import ru.terrarXD.Client;
 import ru.terrarXD.module.Category;
 import ru.terrarXD.module.Module;
@@ -20,138 +18,121 @@ import ru.terrarXD.shit.event.events.EventRender2D;
 import ru.terrarXD.shit.event.events.EventUpdate;
 import ru.terrarXD.shit.settings.BooleanSetting;
 import ru.terrarXD.shit.settings.FloatSetting;
-import ru.terrarXD.shit.utils.MathUtils;
 import ru.terrarXD.shit.utils.TimerUtils;
 import ru.terrarXD.shit.utils.Utils;
 
-import javax.vecmath.Matrix4f;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-/**
- * @author zTerrarxd_
- * @since 15:57 of 26.04.2023
- */
-/*
 public class AimBot extends Module {
-    BooleanSetting bots;
+
+    public static boolean work = false;
     BooleanSetting silent;
+    BooleanSetting multipoint;
+
+    BooleanSetting bots;
+    int ticks = 0;
+
+    BooleanSetting bow;
+
+    BooleanSetting autoShoot;
+    FloatSetting cps;
+    BooleanSetting checkCoolDown;
+
+    FloatSetting fov;
     BooleanSetting autoPredict;
     FloatSetting predict;
-    BooleanSetting selfPredict;
-    FloatSetting fov;
-    BooleanSetting autoShoot;
-
-    //FloatSetting minCPS;
-    //FloatSetting maxCPS;
 
     TimerUtils timer;
 
-    public boolean work = false;
-
-    EntityLivingBase entityLivingBase;
-
-
-
-
+    public TimerUtils timerLastSee;
     public AimBot() {
         super("AimBot", Category.Combat);
         add(bots = new BooleanSetting("Bots", false));
         add(silent = new BooleanSetting("Silent", true));
+        add(bow = new BooleanSetting("Bow", false));
+        add(multipoint = new BooleanSetting("MultiPoint", true));
+        add(fov = new FloatSetting("Fov", 0, 360, 100, 1));
         add(autoPredict = new BooleanSetting("AutoPredict", true));
-        add(predict = (FloatSetting) new FloatSetting("Predict", 0, 10, 5.5f, 0.1f).setVisible(()->!autoPredict.getVal()));
-        add(fov = new FloatSetting("Fov", 0, 360, 90, 1));
+        add(predict = (FloatSetting) new FloatSetting("Predict", 0, 10, 5.5f, 0.01f).setVisible(()-> !autoPredict.getVal()));
         add(autoShoot = new BooleanSetting("AutoShoot", true));
-        //add(minCPS = (FloatSetting) new FloatSetting("MinCPS", 0, 30, 13, 1).setVisible(()->autoShoot.getVal()));
-        //add(maxCPS = (FloatSetting) new FloatSetting("MaxCPS", 0, 30, 16, 1).setVisible(()->autoShoot.getVal()));
-
-        add(selfPredict = new BooleanSetting("SelfPredict", false));
+        add(checkCoolDown = (BooleanSetting) new BooleanSetting("CheckCoolDown", false).setVisible(()->autoShoot.getVal()));
+        add(cps = (FloatSetting) new FloatSetting("CPS", 0, 20, 15, 1f).setVisible(()->autoShoot.getVal()));
         timer = new TimerUtils();
-    }
-    public float getDistance(Vec3d vec3d1 , Vec3d vec3d2){
-        float f = (float)(vec3d1.xCoord - vec3d2.xCoord);
-        float f1 = (float)(vec3d1.yCoord - vec3d2.yCoord);
-        float f2 = (float)(vec3d1.zCoord - vec3d2.zCoord);
-        return MathHelper.sqrt(f * f + f1 * f1 + f2 * f2);
-    }
-
-    public Vec3d getPos(EntityLivingBase target, Vec3d posPlayer){
-
-        ArrayList<Vec3d> vec3ds = new ArrayList<>();
-        for (float y = 0; y < target.height; y+=0.35f) {
-            for (float x = 0; x < target.width; x+=0.1f) {
-                for (float z = 0; z < target.width; z+=0.1f) {
-                    if (Utils.canEntityBeSeen(new Vec3d(target.posX + x, target.posY + y, target.posZ + z), posPlayer)){
-                        vec3ds.add(new Vec3d(x, y, z));
-                    }
-                }
-            }
-        }
-
-        vec3ds.sort(new Comparator<Vec3d>() {
-            @Override
-            public int compare(Vec3d o1, Vec3d o2) {
-                float d =  (getDistance(o1, new Vec3d(0, target.getEyeHeight(), 0))) - (getDistance(o2, new Vec3d(0, target.getEyeHeight(), 0)));
-                return (int) (d * 100000);
-            }
-        });
-        if(vec3ds.size() == 0){
-            return null;
-        }
-        Vec3d pos = vec3ds.get(0);
-        float pred = predict.getVal();
-        if (autoPredict.getVal()){
-            pred = (mc.getConnection().getPlayerInfo(this.mc.player.getUniqueID()).getResponseTime()) / 20f;
-
-        }
-        pos.xCoord = pos.xCoord+target.posX- (target.lastTickPosX-target.posX)*pred;
-        pos.yCoord = pos.yCoord+target.posY;
-        pos.zCoord = pos.zCoord+target.posZ-(target.lastTickPosZ-target.posZ)*pred;
-
-        return pos;
+        timerLastSee = new TimerUtils();
     }
 
     @EventTarget
     public void onUpdate(EventUpdate event){
-        //2658
         if (mc.currentScreen instanceof GuiSleepMP){
             setEnabled(false);
-            return;
         }
-        work = false;
-        EntityLivingBase target = getTarget();
+        TargetResult target = getTarget(predict.getVal());
         if (target == null){
             work = false;
+            ticks = 0;
             return;
         }
-        if(mc.player.height < 1){
-            work = false;
-            return;
-        }
-        entityLivingBase = target;
+        timerLastSee.reset();
         work = true;
-        Vec3d mepos = new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ);
-        mepos = new Vec3d(mc.player.posX, mc.player.posY+mc.player.getEyeHeight(), mc.player.posZ);
-        if(selfPredict.getVal()){
-            mepos = getPredict(mc.player, mc.getRenderPartialTicks());
+        ticks++;
+
+        aim(target, event);
+        if (autoShoot.getVal() && ticks > 1){
+            if (timer.hasReached((long) (1000l / cps.getVal()))){
+                shoot(target.getTarget());
+            }
         }
 
-        EntityPlayer player = mc.player;
-        if (Client.moduleManager.getModule("AntiAim").isEnabled()){
-            //player = ((AntiAim)Client.moduleManager.getModule("AntiAim")).player;
-        }
-        Vec3d targetpos = getPos((EntityLivingBase) target, new Vec3d(player.posX, player.posY+player.getEyeHeight(), player.posZ));
-        if (mc.player.getHeldItem(EnumHand.MAIN_HAND).itemDamage == 720 || mc.player.getHeldItem(EnumHand.MAIN_HAND).itemDamage == 721){
-            targetpos.yCoord+=mc.player.getDistanceToEntity(target) / 100;
+    }
+
+    @EventTarget
+    public void onPostUpdate(EventPostUpdate event) {
+        /*
+        if (autoShoot.getVal() && ticks > 3){
+            TargetResult target = getTarget(predict.getVal());
+            if (target == null){
+                work = false;
+                return;
+            }
+            work = true;
+
+            if (timer.hasReached((long) (1000l*0.05289941f))){
+                shoot(target.getTarget());
+            }
         }
 
-        if (targetpos == null){
-            return;
+         */
+    }
+
+    public float getPuliSpeed(){
+        return 0;
+    }
+
+
+    @EventTarget
+    public void onRender2D(EventRender2D event){}
+
+
+
+    public void  shoot(EntityLivingBase target){
+        if ((checkCoolDown.getVal() && mc.player.getCooldownTracker().getCooldown(mc.player.inventory.getCurrentItem().getItem(), mc.getRenderPartialTicks()) == 0) || !checkCoolDown.getVal()){
+            mc.playerController.clickBlock(new BlockPos(mc.player.posX, mc.player.posY + 1, mc.player.posZ), EnumFacing.UP);
+            mc.player.swingArm(EnumHand.MAIN_HAND);
+            timer.reset();
+
         }
+    }
 
+    public float getBowOffset(Entity t) {
+        double distY = Math.abs(mc.player.posY - t.posY) * Math.abs(mc.player.posY - t.posY) / 36f;
+        return (float) (((mc.player.getDistanceToEntity(t) * mc.player.getDistanceToEntity(t)) / (360 * 5.5)) + ((bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? distY : 0));
+    }
 
-        float[] rotations = Utils.getNeededRotations(targetpos.xCoord, targetpos.yCoord, targetpos.zCoord, mepos.xCoord, mepos.yCoord, mepos.zCoord);
+    public void aim(TargetResult target, EventUpdate event){
+        float pred = (mc.getConnection().getPlayerInfo(this.mc.player.getUniqueID()).getResponseTime()) / 20f;
+
+        float[] rotations = getAim(target, autoPredict.getVal() ? pred : predict.getVal());
         if (silent.getVal()){
             event.setRotationYaw(rotations[0]);
             event.setRotationPitch(rotations[1]);
@@ -162,75 +143,164 @@ public class AimBot extends Module {
             mc.player.rotationYaw = rotations[0];
             mc.player.rotationPitch = rotations[1];
         }
-
-    }
-
-    @EventTarget
-    public void onRender2D(EventRender2D event){
-
-
     }
 
 
-    @EventTarget
-    public void onPostUpdate(EventPostUpdate event){
-        EntityLivingBase target = getTarget();
-        if (target == null){
-            return;
-        }
-        //System.out.println("hasTarget");
-        if (autoShoot.getVal()){
-            if(timer.hasReached(300)){
+    public float[] getAim(TargetResult target, float predict){
+        predict+=(bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? mc.player.getDistanceToEntity(target.getTarget()) / 5 : 0;
+        float bowOffset = (bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? getBowOffset(target.getTarget()) : 0;
 
-                mc.clickMouse();
-                timer.reset();
-            }
-
-        }
+        double posX = (target.getTarget().lastTickPosX - target.getTarget().posX) * predict;
+        double posZ = (target.getTarget().lastTickPosZ - target.getTarget().posZ) * predict;
+        double posY = bowOffset;
+            return Utils.getNeededRotations(target.getTarget().posX - posX + target.getPos().xCoord, target.getTarget().posY + target.getPos().yCoord+posY, target.getTarget().posZ - posZ + target.getPos().zCoord, mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
     }
 
-
-    public EntityLivingBase getTarget(){
-        ArrayList<Entity> entities = new ArrayList<>(mc.world.loadedEntityList);
-        entities.sort(new Comparator<Entity>() {
-            @Override
-            public int compare(Entity o1, Entity o2) {
-                return (int) (Utils.fovFromEntity(o1) - Utils.fovFromEntity(o2));
-            }
-        });
-        EntityPlayer player = mc.player;
-        /*
-        if (Client.moduleManager.getModule("AntiAim").isEnabled()){
-            player = ((AntiAim)Client.moduleManager.getModule("AntiAim")).player;
+    public Vec3d getMultipointPos(EntityLivingBase target, float predict){
+        if (mc.player.canEntityBeSeen(target)){
+            return new Vec3d(0, target.getEyeHeight(), 0);
         }
-
-
-        for (Entity entity : entities) {
-            if (entity instanceof EntityLivingBase && entity.getEntityId() != -7777 && !Client.friendsManager.isFriend(entity.getName()) && !entity.isInvisible()) {
-                if ((entity instanceof EntityZombie && bots.getVal()) || (entity instanceof EntityPlayer && entity != mc.player) && ((EntityLivingBase  ) entity).getHealth()> 0) {
-                    if (Utils.fov(entity, fov.getVal())){
-
-                        Vec3d vec3d = getPos((EntityLivingBase) entity, new Vec3d(player.posX, player.posY+player.getEyeHeight(), player.posZ));
-                        if (vec3d != null){
-                            return (EntityLivingBase) entity;
+        ArrayList<Vec3d> vec3ds = new ArrayList<>();
+        double posX = (target.lastTickPosX - target.posX) * predict;
+        double posZ = (target.lastTickPosZ - target.posZ) * predict;
+        if (mc.player.canEntityBeSeen((target.posX - posX), (target.posY)+target.getEyeHeight(), (target.posZ - posZ))){
+            return new Vec3d(0, target.getEyeHeight(), 0);
+        }else if (multipoint.getVal()){
+            final int[] ready = {0};
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    for (float x = -target.width/2; x < 0; x+=0.1f) {
+                        for (float y = 0; y < target.height; y+=0.1f) {
+                            for (float z = -target.width/2; z < 0; z++) {
+                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                    vec3ds.add(new Vec3d(x, y, z));
+                                }
+                            }
                         }
+                    }
+                    ready[0]++;
+                }
+            }.start();
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    for (float x = 0; x < target.width/2; x+=0.1f) {
+                        for (float y = 0; y < target.height; y+=0.1f) {
+                            for (float z = -target.width/2; z < 0; z++) {
+                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                    vec3ds.add(new Vec3d(x, y, z));
+                                }
+                            }
+                        }
+                    }
+                    ready[0]++;
+                }
+            }.start();
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    for (float x = -target.width/2; x < 0; x+=0.1f) {
+                        for (float y = 0; y < target.height; y+=0.1f) {
+                            for (float z = 0; z < target.width/2; z++) {
+                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                    vec3ds.add(new Vec3d(x, y, z));
+                                }
+                            }
+                        }
+                    }
+                    ready[0]++;
+                }
+            }.start();
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    for (float x = 0; x < target.width/2; x+=0.1f) {
+                        for (float y = 0; y < target.height; y+=0.1f) {
+                            for (float z = 0; z < target.width/2; z++) {
+                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                    vec3ds.add(new Vec3d(x, y, z));
+                                }
+                            }
+                        }
+                    }
+                    ready[0]++;
+                }
+            }.start();
+            long time = System.currentTimeMillis();
+            while (ready[0] != 4){
+                if (System.currentTimeMillis()- time > 50){
+                    //System.out.println("stop");
+                    break;
+                }
+                //System.out.println(ready[0]);
+            }
+            if (vec3ds.size()>0){
+                vec3ds.sort(new Comparator<Vec3d>() {
+                    @Override
+                    public int compare(Vec3d o1, Vec3d o2) {
+                        return (int) ((Utils.getDistance(o1, new Vec3d(0, target.getEyeHeight(), 0)) - Utils.getDistance(o2, new Vec3d(0, target.getEyeHeight(), 0))) *1000);
+                    }
+                });
+                return vec3ds.get(0);
+            }else {
+                return null;
+            }
+        }
+        return null;
+
+    }
 
 
+    public TargetResult getTarget(float predict){
+        ArrayList<TargetResult> targetResults = new ArrayList<>();
+        for (Entity entity : mc.world.loadedEntityList){
+            if (entity instanceof EntityLivingBase && mc.player != entity && !entity.isInvisible()) {
+                if (Utils.fov(entity, fov.getVal()) && !Client.friendsManager.isFriend(entity.getName()) && entity.getEntityId() != -7777 && ((EntityLivingBase) entity).getHealth()>0) {
+                    if ((bots.getVal() && (entity instanceof EntityPlayer || entity instanceof EntityZombie)) || (entity instanceof EntityPlayer && !bots.getVal())){
+                        Vec3d vec3d = getMultipointPos((EntityLivingBase) entity, predict);
+                        if (vec3d!=null){
+                            targetResults.add(new TargetResult((EntityLivingBase) entity, vec3d));
+                        }
                     }
 
                 }
             }
         }
+        targetResults.sort(new Comparator<TargetResult>() {
+            @Override
+            public int compare(TargetResult o1, TargetResult o2) {
+                return (int) (mc.player.getDistanceToEntity(o1.getTarget()) - mc.player.getDistanceToEntity(o2.getTarget()));
+            }
+        });
+        if (targetResults.size() > 0){
+            return targetResults.get(0);
+        }
         return null;
     }
 
 
-    public Vec3d getPredict(Entity entity, float pred){
-        return new Vec3d((entity.posX - (entity.lastTickPosX-entity.posX)*pred), entity.posY,  (entity.posZ - (entity.lastTickPosZ-entity.posZ)*pred));
-    }
+
 
 
 }
+class TargetResult{
+    EntityLivingBase target;
+    Vec3d pos;
+    public TargetResult(EntityLivingBase target, Vec3d pos){
+        this.pos = pos;
+        this.target = target;
+    }
 
- */
+    public EntityLivingBase getTarget() {
+        return target;
+    }
 
+    public Vec3d getPos() {
+        return pos;
+    }
+}

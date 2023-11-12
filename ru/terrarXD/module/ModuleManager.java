@@ -48,10 +48,12 @@ public class ModuleManager {
         add(new StreamerMode());
         add(new NoHustCam());
         add(new Derp());
-        add(new newAimBot());
+        add(new AimBot());
         add(new FastPeak());
         add(new ViewModel());
         add(new Notifications());
+        //add(new AutoHeal());
+        add(new NoServerRotation());
         //add(new Fly());
     }
 

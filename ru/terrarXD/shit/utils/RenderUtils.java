@@ -198,6 +198,54 @@ public class RenderUtils {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
+
+
+    public static void drawCircle(float x, float y, float radius, int color, int angle)
+    {
+        float f = (float)(color >> 24 & 255) / 255.0F;
+        float f1 = (float)(color >> 16 & 255) / 255.0F;
+        float f2 = (float)(color >> 8 & 255) / 255.0F;
+        float f3 = (float)(color & 255) / 255.0F;
+        boolean flag = GL11.glIsEnabled(GL11.GL_BLEND);
+        boolean flag1 = GL11.glIsEnabled(GL11.GL_LINE_SMOOTH);
+        boolean flag2 = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
+        if (!flag)
+        {
+            GL11.glEnable(GL11.GL_BLEND);
+        }
+        if (!flag1)
+        {
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        }
+        if (flag2)
+        {
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+        }
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(f1, f2, f3, f);
+        GL11.glLineWidth(2.5F);
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        for (int i = 0; i <= angle; ++i)
+        {
+            GL11.glVertex2d((double)x + Math.sin((double)i * Math.PI / 180.0D) * (double)radius, (double)y + Math.cos((double)i * Math.PI / 180.0D) * (double)radius);
+        }
+        GL11.glEnd();
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        if (flag2)
+        {
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+        }
+        if (!flag1)
+        {
+            GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        }
+        if (!flag)
+        {
+            GL11.glDisable(GL11.GL_BLEND);
+        }
+        GlStateManager.resetColor();
+    }
     public static void scissor(double x, double y, double width, double height) {
         Minecraft mc = Minecraft.getMinecraft();
         ScaledResolution sr = new ScaledResolution(mc);

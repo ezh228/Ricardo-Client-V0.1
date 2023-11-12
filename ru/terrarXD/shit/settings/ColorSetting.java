@@ -1,7 +1,6 @@
 package ru.terrarXD.shit.settings;
 
-import net.minecraft.world.BossInfo;
-import ru.terrarXD.clickgui.set.Set;
+
 
 import java.awt.*;
 

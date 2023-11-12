@@ -5,7 +5,7 @@ import org.lwjgl.input.Mouse;
 import ru.terrarXD.Client;
 import ru.terrarXD.module.Category;
 import ru.terrarXD.module.Module;
-import ru.terrarXD.module.modules.Combat.newAimBot;
+import ru.terrarXD.module.modules.Combat.AimBot;
 import ru.terrarXD.shit.event.EventTarget;
 import ru.terrarXD.shit.event.events.EventUpdate;
 import ru.terrarXD.shit.settings.BooleanSetting;
@@ -24,7 +24,7 @@ public class Derp extends Module {
 
     @EventTarget
     public void onUpdate(EventUpdate event){
-        boolean can = (Client.moduleManager.getModule("AimBot").isEnabled() ? !((newAimBot)Client.moduleManager.getModule("AimBot")).work : true);
+        boolean can = (Client.moduleManager.getModule("AimBot").isEnabled() ? !((AimBot)Client.moduleManager.getModule("AimBot")).work : true);
         if (can){
             if (!(Mouse.isButtonDown(0) || Mouse.isButtonDown(1))){
                 if (server.getVal()){

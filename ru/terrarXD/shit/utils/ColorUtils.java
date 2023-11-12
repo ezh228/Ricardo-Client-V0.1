@@ -178,6 +178,6 @@ public class ColorUtils {
         int f = (int)(color >> 16 & 255);
         int f1 = (int)(color >> 8 & 255);
         int f2 = (int)(color & 255);
-        return new Color(f, f1, f2, alpha).getRGB();
+        return new Color(f, f1, f2,(int) MathUtils.clamp(alpha, 0, 255)).getRGB();
     }
 }

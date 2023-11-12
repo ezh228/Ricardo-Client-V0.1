@@ -1,7 +1,6 @@
 package ru.terrarXD.shit.config;
 
 import ru.terrarXD.Client;
-import ru.terrarXD.clickgui.set.Set;
 import ru.terrarXD.module.BindType;
 import ru.terrarXD.module.HudModule;
 import ru.terrarXD.module.Module;

@@ -23,13 +23,11 @@ import java.awt.*;
  * @since 13:14 of 17.04.2023
  */
 public class WaterMark extends HudModule {
-    BooleanSetting shadow;
     public WaterMark() {
         super("WaterMark", Category.Hud, 100, 25);
         setPosX(10);
         setPosY(10);
         setEnabled(true);
-        add(shadow = new BooleanSetting("Shadow", false));
     }
 
 
@@ -42,30 +40,21 @@ public class WaterMark extends HudModule {
         }
 
          */
+        setSizeY(17);
         String text= Client.NAME_FULL+" "+Client.VERSION;
         if (!Client.actual){
-            text+=" устаревшая версия";
+            text+=" old";
         }
         setSizeX(Fonts.main_18.getStringWidth(text)+4);
         float x = getPosX();
         float y = getPosY();
-
-        renderRect();
-        if (shadow.getVal()){
-            BloomUtil.renderBlur(()->renderRect());
-        }
-        Fonts.main_18.drawString(Client.NAME_FULL.substring(0,1), x+2, y+7.5f-(Fonts.main_18.getHeight()/2), Client.getColor());
-
-        Fonts.main_18.drawString(Client.NAME_FULL.substring(1, Client.NAME_FULL.length())+" "+Client.VERSION + (Client.actual ? "" : " устаревшая версия"), x+8, y+7.5f-(Fonts.main_18.getHeight()/2), -1);
-        Fonts.main_18.drawString("by zTerrarxd_", x+2, y+10+7.5f-(Fonts.main_18.getHeight()/2), -1);
-
+        int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.1d).getRGB();
+        int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.3d).getRGB();
+        int color = new Color(29, 29, 29).getRGB();
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x+getSizeX(), y+getSizeY(), 5, 1f, colorMain2, colorMain1, colorMain2, colorMain1, false, true, true);
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y+3, x+getSizeX(), y+getSizeY(), 5, 1f, color, color, color, color, false, true, true);
+        Fonts.main_18.drawString(text, x+2, y+7, -1);
     }
 
-    public void renderRect(){
-        float x = getPosX();
-        float y = getPosY();
-        int colorMain = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.92d).getRGB();
-        RenderUtils.drawRoundedRect(x, y, x+getSizeX(), y+15, 5, colorMain);
-        RenderUtils.drawRoundedRect(x, y, x+ Fonts.main_18.getStringWidth("by zTerrarxd_")+5, y+25, 5, colorMain);
-    }
+
 }

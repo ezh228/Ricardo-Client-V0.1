@@ -67,6 +67,9 @@ public class Notifications extends Module {
             anim.speed = 0.05f;
             int height = 18;
             int width = Fonts.main_16.getStringWidth(text)+2*4;
+            if (width < Fonts.main_18.getStringWidth(name)+2*4){
+                width = Fonts.main_18.getStringWidth(name)+2*4;
+            }
             GL11.glPushMatrix();
             GL11.glTranslated(x, y, 0);
             GL11.glRotatef((90- (anim.getAnim()*90f)), 0, 0, 1);

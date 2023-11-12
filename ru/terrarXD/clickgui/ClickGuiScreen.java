@@ -1,84 +1,125 @@
 package ru.terrarXD.clickgui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.terrarXD.Client;
+import ru.terrarXD.clickgui.screen.Screen;
+import ru.terrarXD.clickgui.screen.ScreenMods;
+import ru.terrarXD.clickgui.screen.ScreenSearch;
 import ru.terrarXD.module.Category;
 import ru.terrarXD.module.modules.Hud.ClickGui;
+import ru.terrarXD.module.modules.Hud.Notifications;
 import ru.terrarXD.shit.config.ConfigGuiIMG;
 import ru.terrarXD.shit.fonts.Fonts;
-import ru.terrarXD.shit.settings.FloatSetting;
-import ru.terrarXD.shit.settings.ModeSetting;
 import ru.terrarXD.shit.utils.*;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * @author zTerrarxd_
- * @since 14:47 of 19.04.2023
+ * @date 06.11.2023 17:41
  */
 public class ClickGuiScreen extends GuiScreen {
-    public float posX=100;
-    public float posY=100;
-    public float sizeX=500;
-    public float sizeY=300;
-    public ArrayList<Panel> panels = new ArrayList<>();
-    public Panel currentPanel = null;
-    boolean drag=false;
+    int posX = 100;
+    int posY = 100;
+    boolean drag =  false;
     float dragX;
     float dragY;
-
-    boolean dragSize=false;
-    AnimationUtils anim;
+    public ru.terrarXD.shit.utils.TextField textField;
     AnimationUtils animAnime;
 
-    public ClickGuiScreen(){
-        for (Category category : Category.values()){
-            panels.add(new Panel(category));
-        }
-        anim = new AnimationUtils(0, 255, 1f);
-        animAnime = new AnimationUtils(-500, 0, 0.5f);
-    }
-    public boolean canDrag = true;
+
+    public int WIDTH;
+    public int HEIGHT;
+    ArrayList<Panel> panels = new ArrayList<>();
+    ArrayList<Screen> screens = new ArrayList<>();
+
+    public Screen cuuentScreen;
+
+    public Panel currentPanel;
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
         Client.configManager.save();
+
+    }
+
+    public ClickGuiScreen(){
+        for (Category category : Category.values()){
+            panels.add(new Panel(category.name()));
+        }
+        for (Category category : Category.values()){
+            screens.add(new ScreenMods(category));
+
+        }
+        animAnime = new AnimationUtils(-500, 0, 0.5f);
+        screens.add(new ScreenSearch());
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        anim.setAnim(50);
-        anim.speed = 0.1f;
-        for(Panel panel : panels){
-            panel.reset();
+        textField = new ru.terrarXD.shit.utils.TextField(1337, Fonts.main_18, width/2-100, height/2-10, 200, 20);
+        textField.setText("Поиск...");
+        if (width < 960){
+            WIDTH = (int) (960/2.1f);
+            HEIGHT = 960 * 9 / 16;
+        }else {
+            WIDTH = (int) (width/2.1f);
+            HEIGHT = WIDTH * 9 / 16;
         }
+
         animAnime.setAnim(500);
 
-
     }
-    public int getColor(int color){
-        return ColorUtils.swapAlpha(color, (int) ((new Color(color).getAlpha() * anim.getAnim())/255));
+
+    public void setCurrentPanel(Panel panel){
+        textField.setFocused(false);
+        textField.setText("Поиск...");
+        currentPanel = panel;
+        for (Category category : Category.values()){
+            if (category.name().equals(panel.name)){
+                for (Screen screen : screens){
+                    if (screen instanceof ScreenMods &&  ((ScreenMods) screen).getCategory() == category){
+                        cuuentScreen = screen;
+                        cuuentScreen.init();
+                        return;
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+        if (!textField.getText().equals("Поиск...")){
+            for (Screen screen : screens){
+                if (screen instanceof ScreenSearch){
+                    cuuentScreen = screen;
+                }
+            }
+        }
+
         ClickGui module = (ClickGui) Client.moduleManager.getModule("ClickGui");
+        if (drag){
+            if (!Mouse.isButtonDown(0)){
+                drag = false;
+            }
+            posX = (int) (mouseX-dragX);
+            posY = (int) (mouseY-dragY);
+        }
         if (module.blur.getVal()){
             GaussianBlur.renderBlur((int)module.blurradius.getVal(), ()->RenderUtils.drawRect(0, 0, width, height, -1));
-
         }
         if (module.anime.getVal()){
             //RenderUtils.drawRect(0, 0, width, height, -1);
@@ -110,84 +151,92 @@ public class ClickGuiScreen extends GuiScreen {
             }
         }
 
-
-
-        canDrag = true;
-        if (drag){
-            if (!Mouse.isButtonDown(0)){
-                drag = false;
-            }
-            posX = mouseX-dragX;
-            posY = mouseY-dragY;
-        }
-        if (dragSize){
-            if (!Mouse.isButtonDown(0)){
-                dragSize = false;
-            }
-            sizeX = MathUtils.clamp(mouseX-posX, 350, 1000) ;
-            sizeY = MathUtils.clamp(mouseY-posY, 200, 1000) ;
-        }
-        GL11.glPushMatrix();
-        RenderUtils.customScaledObject2D(posX, posY, width, height, 1);
-        int colorMain = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(getColor()), 0.9d).getRGB());
-        int colorCategorys = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(getColor()), 0.95d).getRGB());
-
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX, posY, posX+sizeX, posY+sizeY, 10, 0, colorMain, colorMain, colorMain, colorMain, false, true, false);
+        int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.9d).getRGB();
+        int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.85d).getRGB();
+        int colorMain3 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.8d).getRGB();
+        int r = 3;
+        //RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX-r, posY-r, posX+ WIDTH+r, posY+HEIGHT+r, 10,1f, -1, -1, -1, -1, true, true, true);
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX, posY, posX+ WIDTH, posY+HEIGHT, 10, 1f, colorMain1, colorMain2, colorMain3, colorMain2, false, true, true);
+        RenderUtils.drawImage("logo_new", posX+WIDTH-100, posY+HEIGHT-100, 100, 100, new Color(29, 29, 29, 20).getRGB());
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        RenderUtils.scissor(posX-10, posY-10, 120, sizeY+10);
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX, posY, posX+sizeX, posY+sizeY, 10, 0, colorCategorys, colorCategorys, colorCategorys, colorCategorys, false, true, false);
-
+        RenderUtils.scissor(posX, posY, 100, 1000);
+        int color = new Color(29, 29, 29, 50).getRGB();
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX+3, posY+3, posX+ WIDTH-3, posY+HEIGHT-3, 10, 1f, color, color, color, color, false, true, true);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        Fonts.main_36.drawCenteredString(Client.NAME.substring(0, 1)+"           ", posX+55, posY+15, Client.clickGuiScreen.getColor());
-
-        Fonts.main_36.drawCenteredString("  "+Client.NAME.substring(1, Client.NAME.length()), posX+55, posY+15, getColor(-1));
-        Fonts.main_12.drawString("Client " + Client.VERSION, posX+55, posY+40, getColor(-1));
-        float yPanels = posY+ 50;
-        for (Panel panel : panels){
-            panel.drawScreen(posX, yPanels, mouseX, mouseY);
-            yPanels+=panel.getHeight();
-        }
-
-        if(currentPanel == null){
-            Fonts.main_25.drawCenteredString("Всеми знакомая легенда", posX+120+(sizeX-120)/2, posY+(sizeY/2)-Fonts.main_25.getHeight()+3, getColor(-1));
-            Fonts.main_25.drawCenteredString("в новом облике", posX+120+(sizeX-120)/2, posY+(sizeY/2), getColor(-1));
+        //Panels
+        Fonts.main_25.drawCenteredString(Client.NAME_FULL, posX+100/2, posY+60/2-Fonts.main_25.getHeight()/2, -1);
+        int pos = 100/2+ Fonts.main_25.getStringWidth(Client.NAME_FULL)/2;
+        Fonts.main_12.drawString(Client.VERSION, posX+pos-Fonts.main_12.getStringWidth(Client.VERSION), posY+60/2+Fonts.main_25.getHeight()/2+2, -1);
+        if (cuuentScreen != null){
+            cuuentScreen.drawScreen(posX+100+20, posY+40, mouseX, mouseY);
         }else {
-            currentPanel.drawScreenMods(posX+120, posY, mouseX, mouseY);
+            Fonts.main_25.drawCenteredString("Всеми знакомая легенда", posX+120+(WIDTH-120)/2, posY+(HEIGHT/2)-Fonts.main_25.getHeight()+3, -1);
+            Fonts.main_25.drawCenteredString("в новом облике", posX+120+(WIDTH-120)/2, posY+(HEIGHT/2), -1);
         }
-        GL11.glPopMatrix();
+        int y = 60;
+        for (Panel panel : panels){
+            panel.drawScreen(posX+10, posY+y, mouseX, mouseY);
+            y+=panel.getHeight()+2;
+        }
+        textField.xPosition = posX+100+(WIDTH-100)/2+5+3;
+        textField.yPosition = posY+10+15/2-Fonts.main_18.getHeight()/2;
+        textField.height = 15;
 
+        textField.width = (Client.clickGuiScreen.WIDTH-100-40-10)/2-(textField.height*2)-20+2;
+        textField.setMaxStringLength(60);
+        textField.setEnableBackgroundDrawing(false);
+        int c = new Color(29, 29, 29).getRGB();
 
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(textField.xPosition-3, textField.yPosition-4, textField.xPosition+textField.getWidth()-3, textField.yPosition+textField.height-4, 5, 1f, c, c, c, c, false, true, true);
+        textField.drawTextBox();
+        Fonts.icons_18.drawString("G", textField.xPosition+textField.getWidth()-3-Fonts.icons_18.getStringWidth("G")-5, textField.yPosition-4+textField.height/2-Fonts.icons_18.getHeight()/2+1, -1);
 
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(textField.xPosition+textField.getWidth()-3+10-3, textField.yPosition-4,textField.xPosition+textField.getWidth()-3+10+textField.height-1, textField.yPosition+textField.height-4, 5, 1f, c, c, c, c, false, true, true);
+        RenderUtils.drawImage("discord", textField.xPosition+textField.getWidth()-3+10, textField.yPosition-2,textField.height-4, textField.height-4, -1);
 
-
+        int add = 25;
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(textField.xPosition+textField.getWidth()-3+10-3+add, textField.yPosition-4,textField.xPosition+textField.getWidth()-3+10+textField.height+add-1, textField.yPosition+textField.height-4, 5, 1f, c, c, c, c, false, true, true);
+        RenderUtils.drawImage("telegram", textField.xPosition+textField.getWidth()-3+10+add, textField.yPosition-2,textField.height-4, textField.height-4, -1);
     }
 
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        super.keyTyped(typedChar, keyCode);
+        textField.textboxKeyTyped(typedChar, keyCode);
+        if (keyCode == Keyboard.KEY_RETURN) {
 
-
-    public int getColor(){
-        return getColor(Client.getColor());
+        }
     }
+
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        float yPanels = posY + 50;
+        if (cuuentScreen != null){
+            cuuentScreen.mouseClicked(posX+100+20, posY+40, mouseX, mouseY, mouseButton);
+        }
+        int y = 60;
         for (Panel panel : panels){
-            panel.mouseClicked(posX, yPanels, mouseX, mouseY, mouseButton);
-            yPanels+=panel.getHeight();
+            panel.mouseClicked(posX+10, posY+y, mouseX, mouseY, mouseButton);
+            y+=panel.getHeight()+2;
         }
-        if (isHover(posX+sizeX-10, posY+sizeY-10, posX+sizeX, posY+sizeY, mouseX, mouseY) && mouseButton == 0){
-            canDrag = false;
-            dragSize=true;
-
-        }
-        if (canDrag && mouseButton == 0 && isHover(posX, posY, posX+sizeX, posY+sizeY, mouseX, mouseY)){
+        if (isHover(posX, posY, posX+100, posY+60, mouseX, mouseY) && mouseButton == 0){
             drag = true;
             dragX = mouseX-posX;
             dragY = mouseY-posY;
         }
-        if (currentPanel != null){
-            currentPanel.mouseClickedMods(posX+120, posY, mouseX, mouseY, mouseButton);
+        if (isHover(textField.xPosition-3, textField.yPosition-4, textField.xPosition+textField.getWidth()-3, textField.yPosition+textField.height-4, mouseX, mouseY) && mouseButton == 0){
+            textField.setFocused(true);
+            textField.setText("");
+        }else {
+
+        }
+        int add = 25;
+        if (isHover(textField.xPosition+textField.getWidth()-3+10-3, textField.yPosition-4,textField.xPosition+textField.getWidth()-3+10+textField.height-1, textField.yPosition+textField.height-4, mouseX, mouseY)){
+            Utils.openWebpage("https://discord.gg/b5KwppSgM7");
+        }
+        if (isHover(textField.xPosition+textField.getWidth()-3+10-3+add, textField.yPosition-4,textField.xPosition+textField.getWidth()-3+10+textField.height+add-1, textField.yPosition+textField.height-4, mouseX, mouseY)){
+            Utils.openWebpage("https://t.me/ricardo_client_offical");
         }
 
     }

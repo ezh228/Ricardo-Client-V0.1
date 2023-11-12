@@ -10,10 +10,18 @@ import ru.terrarXD.shit.discord.DiscordRichPresence;
 import ru.terrarXD.shit.settings.ColorSetting;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 
 public class RPC {
+    public static String text ="";
 
     private static final DiscordRichPresence discordRichPresence = new DiscordRichPresence();
     private static final DiscordRPC discordRPC = DiscordRPC.INSTANCE;
@@ -34,7 +42,7 @@ public class RPC {
         }else if (setting.getColor().getRGB() == new Color(232, 96, 152).getRGB()){
             discordRichPresence.largeImageKey = "logo-pink";
         }
-        discordRichPresence.state = "Тут могла быть ваша реклама";
+        discordRichPresence.state = text;
         discordRPC.Discord_UpdatePresence(discordRichPresence);
     }
 
@@ -51,9 +59,28 @@ public class RPC {
         discordRichPresence.largeImageKey = "logo-blue";
         discordRichPresence.largeImageText = Client.NAME_FULL+" "+Client.VERSION;
         discordRichPresence.joinSecret = "JrfqTXi5CeseEvVafGGkPOFmEVbWZuhN";
-
-        discordRichPresence.state = "Тут могла быть ваша реклама";
+        URL url = null;
+        try {
+            url = new URL("https://ricardoclient.netlify.app/reklama");
+            URLConnection con = url.openConnection();
+            InputStream is = con.getInputStream();
+            text = "";
+            try(BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    text+=line;
+                }
+            }
+            text = text.split("#")[1];
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        discordRichPresence.state = text;
         discordRPC.Discord_UpdatePresence(discordRichPresence);
+
+
     }
 
     public static void stopRPC() {

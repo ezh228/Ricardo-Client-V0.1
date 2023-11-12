@@ -1,17 +1,16 @@
-package ru.terrarXD.clickgui.set;
-
+package ru.terrarXD.clickgui.sets;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.ColorSetting;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.RenderUtils;
 
 import java.awt.*;
-
 /**
  * @author zTerrarxd_
- * @since 15:53 of 21.04.2023
+ * @date 07.11.2023 21:05
  */
 public class ColorPiker extends Set{
+
     AnimationUtils anim;
     public ColorPiker(ColorSetting setting) {
         super(setting);
@@ -39,24 +38,24 @@ public class ColorPiker extends Set{
         }else if (setting.getColor().getRGB() == new Color(232, 96, 152).getRGB()){
             anim.to=wid/7*7-(wid/7/2);
         }
-        Fonts.main_18.drawString(setting.getName(), x+5, y+getHeight()/2-Fonts.main_18.getHeight()/2, getColor(isHover(x,y, x+getWidth(), y+getHeight(), mouseX, mouseY) ? -1 : new Color(200, 200, 200).getRGB()));
-
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, getColor(new Color(247, 50, 56).getRGB()));
+        //Fonts.main_18.drawString(setting.getName(), x+5, y+getHeight()/2-Fonts.main_18.getHeight()/2, isHover(x,y, x+getWidth(), y+getHeight(), mouseX, mouseY) ? -1 : new Color(200, 200, 200).getRGB()));
+        y+=3.5f;
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, new Color(247, 50, 56).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, getColor(new Color(242, 99, 33).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, new Color(242, 99, 33).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f,getColor( new Color(252, 179, 22).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f,new Color(252, 179, 22).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, getColor(new Color(5, 134, 105).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, new Color(5, 134, 105).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f,getColor(new Color(47, 122, 229).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f,new Color(47, 122, 229).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, getColor(new Color(126, 84, 217).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, new Color(126, 84, 217).getRGB());
         posX+=wid/7;
-        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, getColor(new Color(232, 96, 152).getRGB()));
+        RenderUtils.drawRect(posX, y+getHeight()/2-0.5f, posX+wid/7-1, y+getHeight()/2+0.5f, new Color(232, 96, 152).getRGB());
         posX = x+Fonts.main_18.getStringWidth(setting.getName())+10;
 
-        RenderUtils.drawCircle(posX+anim.getAnim(), y+getHeight()/2, 2.5f,getColor( ((ColorSetting)(setting)).getColor().getRGB()));
+        RenderUtils.drawCircle(posX+anim.getAnim(), y+getHeight()/2, 2.5f, ((ColorSetting)(setting)).getColor().getRGB());
     }
 
 
