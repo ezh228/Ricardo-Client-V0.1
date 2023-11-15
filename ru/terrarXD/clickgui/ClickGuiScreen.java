@@ -3,6 +3,7 @@ package ru.terrarXD.clickgui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.world.BossInfo;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -34,6 +35,7 @@ public class ClickGuiScreen extends GuiScreen {
     float dragY;
     public ru.terrarXD.shit.utils.TextField textField;
     AnimationUtils animAnime;
+    AnimationUtils animDark = new AnimationUtils(0, 0, 0.1f);
 
 
     public int WIDTH;
@@ -78,6 +80,8 @@ public class ClickGuiScreen extends GuiScreen {
         }
 
         animAnime.setAnim(500);
+        animDark.setAnim(0f);
+        animDark.to = 1f;
 
     }
 
@@ -120,6 +124,9 @@ public class ClickGuiScreen extends GuiScreen {
         }
         if (module.blur.getVal()){
             GaussianBlur.renderBlur((int)module.blurradius.getVal(), ()->RenderUtils.drawRect(0, 0, width, height, -1));
+        }
+        if (module.darkness.getVal()){
+            RenderUtils.drawRect(0, 0, width, height, ColorUtils.swapAlpha(Color.BLACK.getRGB(), (int) (100*animDark.getAnim())));
         }
         if (module.anime.getVal()){
             //RenderUtils.drawRect(0, 0, width, height, -1);

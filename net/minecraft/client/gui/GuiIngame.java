@@ -166,9 +166,9 @@ public class GuiIngame extends Gui
 
     public void renderGameOverlay(float partialTicks)
     {
-        Utility.render2DRunnables();
+        //Utility.render2DRunnables();
         new EventRender2D(partialTicks).call();
-        Utility.clearRunnables();
+        //Utility.clearRunnables();
         ScaledResolution scaledresolution = new ScaledResolution(this.mc);
         int i = scaledresolution.getScaledWidth();
         int j = scaledresolution.getScaledHeight();

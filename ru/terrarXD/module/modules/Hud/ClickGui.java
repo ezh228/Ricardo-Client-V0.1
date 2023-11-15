@@ -21,6 +21,8 @@ public class ClickGui extends Module {
     public ColorSetting color;
     public BooleanSetting blur;
     public FloatSetting blurradius;
+
+    public BooleanSetting darkness;
     public BooleanSetting anime;
     public ModeSetting animee;
     public FloatSetting animeSize;
@@ -32,6 +34,8 @@ public class ClickGui extends Module {
         setKey(Keyboard.KEY_RSHIFT);
         add(color = new ColorSetting("Color", new Color(5, 134, 105)));
         add(blur = new BooleanSetting("Blur", true));
+        add(darkness = new BooleanSetting("Darkness", true));
+
         add(blurradius = (FloatSetting) new FloatSetting("Blur-Radius",1, 25, 10, 1f).setVisible(()->blur.getVal()));
 
         add(anime = new BooleanSetting("Anime", true));

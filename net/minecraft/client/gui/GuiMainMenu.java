@@ -44,6 +44,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 import ru.terrarXD.Client;
 import ru.terrarXD.shit.GuiAltManager;
+import ru.terrarXD.shit.ShaderMainGui;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.BloomUtil;
@@ -132,12 +133,22 @@ public class GuiMainMenu extends GuiScreen
     private GuiButton modButton;
     private GuiScreen modUpdateNotification;
 
+    ShaderMainGui backgroundShader;
+    long initTime = System.currentTimeMillis();
+
     public GuiMainMenu()
     {
         this.openGLWarning2 = MORE_INFO_TEXT;
         this.splashText = "missingno";
         IResource iresource = null;
-
+        /*
+        try {
+            this.backgroundShader = new ShaderMainGui("/noise.fsh");
+        } catch (IOException var9) {
+            throw new IllegalStateException("Failed to load backgound shader", var9);
+        }
+        
+         */
         try
         {
             List<String> list = Lists.<String>newArrayList();
@@ -229,7 +240,7 @@ public class GuiMainMenu extends GuiScreen
      */
     public void initGui()
     {
-
+        initTime = System.currentTimeMillis();
         alphaAnim.reset();
         alphaAnim.to = 255;
         alphaAnim.setAnim(0);
@@ -668,6 +679,7 @@ public class GuiMainMenu extends GuiScreen
 
          */
         Gui.drawRect(0, 0, width ,height, Color.BLACK.getRGB());
+        //this.backgroundShader.useShader(0, 0, (float)width, (float)height, (float)(System.currentTimeMillis() - this.initTime) / 1000.0F);
 
         RenderUtils.drawImage(new ResourceLocation("client/img/mainmenu.jpg"),(int) xAnim.getAnim() - 25, (int) yAnim.getAnim() - 25,width + 25, height +25, new Color(255, 255, 255,(int) alphaAnim.getAnim()).getRGB());
         xAnim.to = 25 * mouseX / width;

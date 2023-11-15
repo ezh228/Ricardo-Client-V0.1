@@ -184,7 +184,7 @@ public class ExpInfo extends HudModule {
                 exes.remove(i);
             }
         }
-        setSizeY(15+exes.size()*16);
+        setSizeY(15+exes.size()*16+4);
         animSize.to = getSizeY();
         int col = clientColor.getVal() ? Client.getColor() : customColor.getColor().getRGB();
 

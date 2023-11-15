@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import ru.terrarXD.Client;
+import ru.terrarXD.module.modules.Hud.ClickGui;
 import ru.terrarXD.shit.settings.ModeSetting;
 import ru.terrarXD.shit.utils.RenderUtils;
 import ru.terrarXD.shit.utils.Utils;
@@ -62,9 +63,9 @@ public class ConfigGuiIMG extends Config{
 
             }
         }
-
-        ((ModeSetting)Client.moduleManager.getModule("ClickGui").getSettings().get(4)).setVal(names.get(0));
-        ((ModeSetting)Client.moduleManager.getModule("ClickGui").getSettings().get(4)).setModes(names);
+        ClickGui clickGui = (ClickGui) Client.moduleManager.getModule("ClickGui");
+        clickGui.animee.setVal(names.get(0));
+        clickGui.animee.setModes(names);
 
     }
     public class IMGGUI{

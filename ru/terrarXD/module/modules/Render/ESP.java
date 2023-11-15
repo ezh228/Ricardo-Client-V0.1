@@ -68,6 +68,7 @@ public class ESP extends Module {
         add(armor = new BooleanSetting("Show-Item", true));
         add(clientColor = new BooleanSetting("Client-Color", true));
         add(customColor = (ColorSetting) new ColorSetting("Color", new Color(47, 122, 229)).setVisible(()->!clientColor.getVal()));
+
     }
 
     @EventTarget

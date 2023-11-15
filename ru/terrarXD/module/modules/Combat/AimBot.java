@@ -39,6 +39,9 @@ public class AimBot extends Module {
     FloatSetting cps;
     BooleanSetting checkCoolDown;
 
+    BooleanSetting multiTheadering;
+    FloatSetting accuracy;
+
     FloatSetting fov;
     BooleanSetting autoPredict;
     FloatSetting predict;
@@ -52,6 +55,8 @@ public class AimBot extends Module {
         add(silent = new BooleanSetting("Silent", true));
         add(bow = new BooleanSetting("Bow", false));
         add(multipoint = new BooleanSetting("MultiPoint", true));
+        add(multiTheadering = (BooleanSetting) new BooleanSetting("MultiTheadering", true).setVisible(()->multipoint.getVal()));
+        add(accuracy = new FloatSetting("Accuracy", 0.01f, 0.3f, 0.1f, 0.01f));
         add(fov = new FloatSetting("Fov", 0, 360, 100, 1));
         add(autoPredict = new BooleanSetting("AutoPredict", true));
         add(predict = (FloatSetting) new FloatSetting("Predict", 0, 10, 5.5f, 0.01f).setVisible(()-> !autoPredict.getVal()));
@@ -126,7 +131,7 @@ public class AimBot extends Module {
 
     public float getBowOffset(Entity t) {
         double distY = Math.abs(mc.player.posY - t.posY) * Math.abs(mc.player.posY - t.posY) / 36f;
-        return (float) (((mc.player.getDistanceToEntity(t) * mc.player.getDistanceToEntity(t)) / (360 * 5.5)) + ((bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? distY : 0));
+        return (float) (((mc.player.getDistanceToEntity(t) * mc.player.getDistanceToEntity(t)) / (360 * 5.5)) + ((bow.getVal()) ? distY : 0));
     }
 
     public void aim(TargetResult target, EventUpdate event){
@@ -147,8 +152,9 @@ public class AimBot extends Module {
 
 
     public float[] getAim(TargetResult target, float predict){
-        predict+=(bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? mc.player.getDistanceToEntity(target.getTarget()) / 5 : 0;
-        float bowOffset = (bow.getVal() && mc.player.inventory.getCurrentItem().itemDamage == 440) ? getBowOffset(target.getTarget()) : 0;
+        predict+=(bow.getVal()
+        ) ? mc.player.getDistanceToEntity(target.getTarget()) / 5 : 0;
+        float bowOffset = (bow.getVal()) ? getBowOffset(target.getTarget()) : 0;
 
         double posX = (target.getTarget().lastTickPosX - target.getTarget().posX) * predict;
         double posZ = (target.getTarget().lastTickPosZ - target.getTarget().posZ) * predict;
@@ -166,79 +172,92 @@ public class AimBot extends Module {
         if (mc.player.canEntityBeSeen((target.posX - posX), (target.posY)+target.getEyeHeight(), (target.posZ - posZ))){
             return new Vec3d(0, target.getEyeHeight(), 0);
         }else if (multipoint.getVal()){
-            final int[] ready = {0};
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    for (float x = -target.width/2; x < 0; x+=0.1f) {
-                        for (float y = 0; y < target.height; y+=0.1f) {
-                            for (float z = -target.width/2; z < 0; z++) {
-                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
-                                    vec3ds.add(new Vec3d(x, y, z));
+            if (multiTheadering.getVal()){
+                final int[] ready = {0};
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        for (float x = -target.width/2; x < 0; x+=accuracy.getVal()) {
+                            for (float y = 0; y < target.height; y+=accuracy.getVal()) {
+                                for (float z = -target.width/2; z < 0; z+=accuracy.getVal()) {
+                                    if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                        vec3ds.add(new Vec3d(x, y, z));
+                                    }
                                 }
                             }
                         }
+                        ready[0]++;
                     }
-                    ready[0]++;
-                }
-            }.start();
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    for (float x = 0; x < target.width/2; x+=0.1f) {
-                        for (float y = 0; y < target.height; y+=0.1f) {
-                            for (float z = -target.width/2; z < 0; z++) {
-                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
-                                    vec3ds.add(new Vec3d(x, y, z));
+                }.start();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        for (float x = 0; x < target.width/2; x+=accuracy.getVal()) {
+                            for (float y = 0; y < target.height; y+=accuracy.getVal()) {
+                                for (float z = -target.width/2; z < 0; z+=accuracy.getVal()) {
+                                    if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                        vec3ds.add(new Vec3d(x, y, z));
+                                    }
                                 }
                             }
                         }
+                        ready[0]++;
                     }
-                    ready[0]++;
-                }
-            }.start();
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    for (float x = -target.width/2; x < 0; x+=0.1f) {
-                        for (float y = 0; y < target.height; y+=0.1f) {
-                            for (float z = 0; z < target.width/2; z++) {
-                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
-                                    vec3ds.add(new Vec3d(x, y, z));
+                }.start();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        for (float x = -target.width/2; x < 0; x+=accuracy.getVal()) {
+                            for (float y = 0; y < target.height; y+=accuracy.getVal()) {
+                                for (float z = 0; z < target.width/2; z+=accuracy.getVal()) {
+                                    if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                        vec3ds.add(new Vec3d(x, y, z));
+                                    }
                                 }
                             }
                         }
+                        ready[0]++;
                     }
-                    ready[0]++;
-                }
-            }.start();
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    for (float x = 0; x < target.width/2; x+=0.1f) {
-                        for (float y = 0; y < target.height; y+=0.1f) {
-                            for (float z = 0; z < target.width/2; z++) {
-                                if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
-                                    vec3ds.add(new Vec3d(x, y, z));
+                }.start();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        for (float x = 0; x < target.width/2; x+=accuracy.getVal()) {
+                            for (float y = 0; y < target.height; y+=accuracy.getVal()) {
+                                for (float z = 0; z < target.width/2; z+=accuracy.getVal()) {
+                                    if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                        vec3ds.add(new Vec3d(x, y, z));
+                                    }
                                 }
                             }
                         }
+                        ready[0]++;
                     }
-                    ready[0]++;
+                }.start();
+                long time = System.currentTimeMillis();
+                while (ready[0] != 4){
+                    if (System.currentTimeMillis()- time > 50){
+                        //System.out.println("stop");
+                        break;
+                    }
+                    //System.out.println(ready[0]);
                 }
-            }.start();
-            long time = System.currentTimeMillis();
-            while (ready[0] != 4){
-                if (System.currentTimeMillis()- time > 50){
-                    //System.out.println("stop");
-                    break;
+            }else {
+                for (float x = -(target.width/2); x < target.width/2; x+=accuracy.getVal()) {
+                    for (float y = 0; y < target.height; y+=accuracy.getVal()) {
+                        for (float z = -(target.width/2); z < target.width/2; z+=accuracy.getVal()) {
+                            if (mc.player.canEntityBeSeen((target.posX - posX)+x, (target.posY)+y, (target.posZ - posZ)+z)){
+                                vec3ds.add(new Vec3d(x, y, z));
+                            }
+                        }
+                    }
                 }
-                //System.out.println(ready[0]);
             }
+
             if (vec3ds.size()>0){
                 vec3ds.sort(new Comparator<Vec3d>() {
                     @Override

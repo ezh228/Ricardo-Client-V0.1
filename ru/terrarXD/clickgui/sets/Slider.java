@@ -6,10 +6,7 @@ import ru.terrarXD.Client;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.FloatSetting;
 import ru.terrarXD.shit.settings.Setting;
-import ru.terrarXD.shit.utils.AnimationUtils;
-import ru.terrarXD.shit.utils.ColorUtils;
-import ru.terrarXD.shit.utils.MathUtils;
-import ru.terrarXD.shit.utils.RenderUtils;
+import ru.terrarXD.shit.utils.*;
 
 import java.awt.*;
 
@@ -36,6 +33,7 @@ public class Slider extends Set{
         int wid = (int) (x+getWidth()-30-posX);
 
         if(draging){
+
             setting.setVal((float) MathUtils.round((float) ((double)(mouseX - posX) * (setting.getMax() - setting.getMin()) / (double)(wid) + setting.getMin()), setting.getPercent()));
             if (setting.getVal() > setting.getMax()) {
                 setting.setVal(setting.getMax());
@@ -56,7 +54,16 @@ public class Slider extends Set{
         RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(posX, y+getHeight()/2-1, (float) (posX+animSlider.getAnim()), y+getHeight()/2+1, 1, 1f, ColorUtils.swapAlpha(Client.getColor(), 100), ColorUtils.swapAlpha(Client.getColor(), 255), ColorUtils.swapAlpha(Client.getColor(), 255), ColorUtils.swapAlpha(Client.getColor(), 100), false, true, true);
         //RenderUtils.drawGradientRect(posX, y+getHeight()/2-1, (float) (posX+animSlider.getAnim()), y+getHeight()/2+1, true, ColorUtils.swapAlpha(Client.getColor(), 100), ColorUtils.swapAlpha(Client.getColor(), 255));
         GlStateManager.resetColor();
-
+        if (draging){
+            particle2DS.add(new Particle2D((float) (posX+animSlider.getAnim()), y+getHeight()/2, 4));
+        }
+        for (int i = 0; i < particle2DS.size(); i++) {
+            if (particle2DS.get(i).toRemove()){
+                particle2DS.remove(i);
+            }else {
+                particle2DS.get(i).drawAndMovement();
+            }
+        }
     }
 
     @Override

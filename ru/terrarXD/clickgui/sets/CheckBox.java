@@ -6,15 +6,18 @@ import ru.terrarXD.shit.settings.BooleanSetting;
 import ru.terrarXD.shit.settings.Setting;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.ColorUtils;
+import ru.terrarXD.shit.utils.Particle2D;
 import ru.terrarXD.shit.utils.RenderUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author zTerrarxd_
  * @date 06.11.2023 22:16
  */
 public class CheckBox extends Set{
+
     AnimationUtils animButton = new AnimationUtils(0, 0, 0.1f);
 
     public CheckBox(BooleanSetting setting) {
@@ -34,6 +37,9 @@ public class CheckBox extends Set{
         int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.1d).getRGB();
         int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.3d).getRGB();
         int pos = (int) (getWidth()-25);
+        if (animButton.getAnim() != animButton.to){
+            particle2DS.add(new Particle2D(x+pos+5+animButton.getAnim()*10f, y+3+18f/2f, 4));
+        }
         if (setting.getVal()){
             RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x+pos, y+3+4, x+pos+20, y+3f+18-4, 5, 1, colorMain1, colorMain2, colorMain2, colorMain1, false, true ,true);
             int radius = 4;
@@ -54,6 +60,13 @@ public class CheckBox extends Set{
                 Fonts.icons_12.drawCenteredString("H", x+pos+5, y+3+1+18f/2f-Fonts.icons_12.getHeight()/2, ColorUtils.swapAlpha(colorMain2, (int) (255f*animButton.getAnim())));
             }
             RenderUtils.drawCircle(x+pos+5+animButton.getAnim()*10f, y+3+18f/2f, radius, colorMain2);
+        }
+        for (int i = 0; i < particle2DS.size(); i++) {
+            if (particle2DS.get(i).toRemove()){
+                particle2DS.remove(i);
+            }else {
+                particle2DS.get(i).drawAndMovement();
+            }
         }
     }
 

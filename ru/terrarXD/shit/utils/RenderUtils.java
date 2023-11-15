@@ -197,6 +197,7 @@ public class RenderUtils {
         {
             GL11.glDisable(GL11.GL_BLEND);
         }
+        GlStateManager.resetColor();
     }
 
 
@@ -245,7 +246,66 @@ public class RenderUtils {
             GL11.glDisable(GL11.GL_BLEND);
         }
         GlStateManager.resetColor();
+        GlStateManager.resetColor();
     }
+
+    public static void drawCircle2D(float cx, double cy, float radius, float c360, int color, float lineWidth) {
+        GL11.glPushMatrix();
+        customRotatedObject2D(cx, (float)cy, 0.0F, 0.0F, -90.0F);
+        cx *= 2.0F;
+        cy *= 2.0;
+        float theta = -0.0175F;
+        float p = (float)Math.cos((double)theta);
+        float s = (float)Math.sin((double)theta);
+        float x = radius *= 2.0F;
+        float y = 0.0F;
+        enableGL2D();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
+        GlStateManager.glLineWidth(lineWidth);
+        GL11.glBegin(3);
+
+        for(float ii = 0.0F; ii < c360; ii += 6.0F) {
+            glColor(color);
+            GL11.glVertex2f(x + cx, (float)((double)y + cy));
+            float t = x;
+
+            for(float i = 0.0F; i < 6.0F; ++i) {
+                x = p * x - s * y;
+                y = s * t + p * y;
+            }
+        }
+
+        GL11.glEnd();
+        GL11.glScalef(2.0F, 2.0F, 2.0F);
+        disableGL2D();
+        GlStateManager.resetColor();
+        GlStateManager.glLineWidth(1.0F);
+        GL11.glPopMatrix();
+    }
+    public static void customRotatedObject2D(float oXpos, float oYpos, float oWidth, float oHeight, float rotate) {
+        GL11.glTranslated((double)(oXpos + oWidth / 2.0F), (double)(oYpos + oHeight / 2.0F), 0.0);
+        GL11.glRotated((double)rotate, 0.0, 0.0, 1.0);
+        GL11.glTranslated((double)(-oXpos - oWidth / 2.0F), (double)(-oYpos - oHeight / 2.0F), 0.0);
+    }
+
+    public static void disableGL2D() {
+        GL11.glEnable(3553);
+        GL11.glDisable(3042);
+        GL11.glEnable(2929);
+        GL11.glDisable(2848);
+        GL11.glHint(3154, 4352);
+        GL11.glHint(3155, 4352);
+    }
+
+    public static void enableGL2D() {
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        GL11.glHint(3155, 4354);
+    }
+
     public static void scissor(double x, double y, double width, double height) {
         Minecraft mc = Minecraft.getMinecraft();
         ScaledResolution sr = new ScaledResolution(mc);

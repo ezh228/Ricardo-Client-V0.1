@@ -6,13 +6,17 @@ import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.Setting;
 import ru.terrarXD.shit.utils.AnimationUtils;
 import ru.terrarXD.shit.utils.GaussianBlur;
+import ru.terrarXD.shit.utils.Particle2D;
 import ru.terrarXD.shit.utils.RenderUtils;
+
+import java.util.ArrayList;
 
 /**
  * @author zTerrarxd_
  * @date 06.11.2023 22:04
  */
 public class Set extends Comp {
+    ArrayList<Particle2D> particle2DS = new ArrayList<>();
     AnimationUtils anim = new AnimationUtils(0, 0, 0.1f);
     Setting setting;
     public Set(Setting setting){

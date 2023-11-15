@@ -39,7 +39,6 @@ public class ShaderUtility {
                         createShader(mc.getResourceManager().getResource(new ResourceLocation(fragmentShaderLoc)).getInputStream(), GL_FRAGMENT_SHADER);
             };
 
-
              */
 
 
@@ -56,7 +55,6 @@ public class ShaderUtility {
             }else {
                 fragmentShaderID = createShader(mc.getResourceManager().getResource(new ResourceLocation(fragmentShaderLoc)).getInputStream(), GL_FRAGMENT_SHADER);
             }
-
 
             glAttachShader(program, fragmentShaderID);
 
