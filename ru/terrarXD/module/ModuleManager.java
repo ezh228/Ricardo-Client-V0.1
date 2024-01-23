@@ -1,5 +1,6 @@
 package ru.terrarXD.module;
 
+import com.mojang.text2speech.Narrator;
 import ru.terrarXD.module.modules.Combat.*;
 import ru.terrarXD.module.modules.Hud.*;
 import ru.terrarXD.module.modules.Movement.*;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 public class ModuleManager {
     public ArrayList<Module> modules = new ArrayList<>();
     public ModuleManager(){
-
         add(new WaterMark());
         add(new ClickGui());
         add(new ModuleList());
@@ -54,6 +54,7 @@ public class ModuleManager {
         add(new Notifications());
         //add(new AutoHeal());
         add(new NoServerRotation());
+        add(new HitSound());
         //add(new Fly());
     }
 

@@ -2,6 +2,7 @@ package ru.terrarXD.shit.utils;
 
 import net.minecraft.entity.EntityLivingBase;
 import org.lwjgl.opengl.GL11;
+import ru.terrarXD.Client;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -17,6 +18,15 @@ public class ColorUtils {
         float val = MathUtils.clamp((float)Math.sin(Math.PI * 6 * thing) / 2.0f + 0.5f, 0.0f, 1.0f);
         return new Color(MathUtils.lerp((float)cl1.getRed() / 255.0f, (float)cl2.getRed() / 255.0f, val), MathUtils.lerp((float)cl1.getGreen() / 255.0f, (float)cl2.getGreen() / 255.0f, val), MathUtils.lerp((float)cl1.getBlue() / 255.0f, (float)cl2.getBlue() / 255.0f, val));
     }
+
+    public static float[] getHSBFromColor(int hex) {
+        int r = hex >> 16 & 0xFF;
+        int g = hex >> 8 & 0xFF;
+        int b = hex & 0xFF;
+        return Color.RGBtoHSB(r, g, b, null);
+    }
+
+
 
     public static Color getHealthColor(EntityLivingBase entityLivingBase) {
         float health = entityLivingBase.getHealth();

@@ -3,6 +3,7 @@ package ru.terrarXD.module.modules.Combat;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -18,6 +19,7 @@ import ru.terrarXD.shit.settings.BooleanSetting;
 import ru.terrarXD.shit.settings.FloatSetting;
 import ru.terrarXD.shit.settings.ModeSetting;
 import ru.terrarXD.shit.utils.RenderUtils;
+import ru.terrarXD.shit.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,7 @@ public class AutoPeak extends Module {
     public double motionX;
     public double motionZ;
     boolean teleport = false;
+
 
     BooleanSetting timer;
     ModeSetting mode;
@@ -55,12 +58,29 @@ public class AutoPeak extends Module {
                 teleport = true;
             }
         }
-
     }
+
+
+
 
     @EventTarget
     public void render3D(EventRender3D event){
         RenderUtils.drawCircle3D(pos.xCoord, pos.yCoord, pos.zCoord, mode.getVal().equals("Radius") ? radius.getVal() : 0.3f, Client.getColor());
+        /*
+        for (int x = -5; x < 5; x++) {
+            for (int z = -5; z < 5; z++) {
+                BlockPos pos = new BlockPos(mc.player.posX+x, mc.player.posY, mc.player.posZ+z);
+                BlockPos pos_up = new BlockPos(mc.player.posX+x, mc.player.posY+1, mc.player.posZ+z);
+                if (mc.world.getBlockState(pos).getBlock() != Blocks.AIR && mc.world.getBlockState(pos_up).getBlock() != Blocks.AIR){
+                    RenderUtils.blockEspFrame(pos, 1, 0, 0);
+                }
+            }
+        }
+
+         */
+
+
+
     }
 
 

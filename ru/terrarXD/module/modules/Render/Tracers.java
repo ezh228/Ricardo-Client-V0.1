@@ -34,7 +34,7 @@ public class Tracers extends Module {
     @EventTarget
     public void onRender3D(EventRender3D event){
         for (int i = 0; i < mc.world.loadedEntityList.size(); i++) {
-            if (mc.world.loadedEntityList.get(i) instanceof EntityPlayer && mc.world.loadedEntityList.get(i) != mc.player && mc.player.getDistanceToEntity(mc.world.loadedEntityList.get(i)) > 300){
+            if (mc.world.loadedEntityList.get(i) instanceof EntityPlayer && mc.world.loadedEntityList.get(i) != mc.player && mc.player.getDistanceToEntity(mc.world.loadedEntityList.get(i)) > 1000){
                 mc.world.removeEntity(mc.world.loadedEntityList.get(i));
             }
         }

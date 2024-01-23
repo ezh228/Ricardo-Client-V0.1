@@ -55,9 +55,9 @@ public class RPC {
 
         discordRichPresence.startTimestamp = System.currentTimeMillis() / 1000L;
 
-        discordRichPresence.details = "Return edition " + Client.VERSION;
+        discordRichPresence.details = "Version: " + Client.VERSION;
         discordRichPresence.largeImageKey = "logo-blue";
-        discordRichPresence.largeImageText = Client.NAME_FULL+" "+Client.VERSION;
+        discordRichPresence.largeImageText = "Терракота сильно устал";
         discordRichPresence.joinSecret = "JrfqTXi5CeseEvVafGGkPOFmEVbWZuhN";
         URL url = null;
         try {

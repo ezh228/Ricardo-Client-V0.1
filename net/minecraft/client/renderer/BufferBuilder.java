@@ -24,6 +24,7 @@ import optifine.TextureUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
+import ru.terrarXD.shit.utils.ColorUtils;
 import shadersmod.client.SVertexBuilder;
 
 public class BufferBuilder
@@ -507,6 +508,11 @@ public class BufferBuilder
     public BufferBuilder color(float red, float green, float blue, float alpha)
     {
         return this.color((int)(red * 255.0F), (int)(green * 255.0F), (int)(blue * 255.0F), (int)(alpha * 255.0F));
+    }
+
+    public BufferBuilder color(int color)
+    {
+        return this.color((int)(ColorUtils.getRedFromColor(color)), (int)(ColorUtils.getGreenFromColor(color)), (int)(ColorUtils.getBlueFromColor(color)), (int)(ColorUtils.getAlphaFromColor(color)));
     }
 
     public BufferBuilder color(int red, int green, int blue, int alpha)

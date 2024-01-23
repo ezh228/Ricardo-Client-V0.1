@@ -27,8 +27,12 @@ public class AnimationUtils {
     }
 
     public static float harp(float val, float current, float speed) {
-        float emi = ((current - val) * (speed/2)) > 0 ? Math.max((speed), Math.min(current - val, ((current - val) * (speed/2)))) : Math.max(current - val, Math.min(-(speed/2), ((current - val) * (speed/2))));
+
+        float emi = ((current - val) * (speed)) > 0 ? Math.max((speed), Math.min(current - val, ((current - val) * (speed)))) : Math.max(current - val, Math.min(-(speed), ((current - val) * (speed))));
         return val + emi;
+
+
+
     }
     public float getAnim() {
         int count = (int) ((System.currentTimeMillis() - mc) / 5);

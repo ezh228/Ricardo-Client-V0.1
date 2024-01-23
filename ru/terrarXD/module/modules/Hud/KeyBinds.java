@@ -76,30 +76,22 @@ public class KeyBinds extends HudModule {
 
     @EventTarget
     public void onRender2D(EventRender2D event){
-        float x = getPosX();
-        float y = getPosY();
-        int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.1d).getRGB();
-        int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.3d).getRGB();
-        int color = new Color(29, 29, 29).getRGB();
         if (mc.currentScreen instanceof GuiChat){
             //return;
         }
         //setSizeY(15);
         StencilUtil.initStencilToWrite();
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x+getSizeX(), y+getSizeY(), 5, 1f, colorMain2, colorMain1, colorMain2, colorMain1, false, true, true);
+        RenderUtils.drawRoundedRect(getPosX(), getPosY(), getPosX() + getSizeX(), getPosY() + getSizeY(), 5, -1);
 
         StencilUtil.readStencilBuffer(1);
         setSizeX(100);
         int step = 1;
         int colorMain = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.92d).getRGB();
-        /*
+
         RenderUtils.drawRoundedRect(getPosX(), getPosY(), getPosX() + getSizeX(), getPosY() + getSizeY(), 5, colorMain);
         RenderUtils.drawRect(getPosX() + 3, getPosY() + 15-2, getPosX() + getSizeX() - 3, getPosY() + 14, ColorUtils.swapAlpha(Client.getColor(), (int) alpha.getAnim()));
-         */
 
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x+getSizeX(), y+getSizeY(), 5, 1f, colorMain2, colorMain1, colorMain2, colorMain1, false, true, true);
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y+3, x+getSizeX(), y+getSizeY(), 5, 1f, color, color, color, color, false, true, true);
-        Fonts.main_16.drawCenteredString(getName(), getPosX() + getSizeX() / 2, getPosY()+3 + 15/2 - Fonts.main_16.getHeight() / 2, Client.getColor());
+        Fonts.main_16.drawCenteredString(getName(), getPosX() + getSizeX() / 2, getPosY() + 15/2 - Fonts.main_16.getHeight() / 2, Client.getColor());
         int i = 15;
         for (Mod mod : mods){
             mod.render((int) getPosX(), (int) (getPosY() + i), step);

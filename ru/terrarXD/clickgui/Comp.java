@@ -2,7 +2,7 @@ package ru.terrarXD.clickgui;
 
 /**
  * @author zTerrarxd_
- * @date 06.11.2023 18:22
+ * @since 16:56 of 19.04.2023
  */
 public class Comp {
     public Comp(){

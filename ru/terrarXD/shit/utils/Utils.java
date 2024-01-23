@@ -5,7 +5,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import ru.terrarXD.Client;
+import ru.terrarXD.shit.Theme;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
@@ -17,6 +22,22 @@ import java.util.ArrayList;
  */
 public class Utils {
     public  static Minecraft mc = Minecraft.getMinecraft();
+
+    public static void playSound(final String url) {
+
+        new Thread(() -> {
+            try {
+                Clip clip = AudioSystem.getClip();
+
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(Client.class.getResourceAsStream("/assets/minecraft/client/" + url));
+                clip.open(inputStream);
+                clip.start();
+            } catch (Exception e) {
+
+            }
+        }).start();
+    }
+
     public static void setSpeed(double speed) {
         double forward = MovementInput.field_192832_b;
         double strafe = MovementInput.moveStrafe;
@@ -59,6 +80,7 @@ public class Utils {
         double yaw = Math.atan2(x, z) * 57.2957795D;
         return (float)(yaw * -1.0D);
     }
+
     public static ArrayList<File> listFilesForFolder(final File folder) {
         ArrayList<File> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {

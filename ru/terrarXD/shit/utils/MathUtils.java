@@ -1,5 +1,8 @@
 package ru.terrarXD.shit.utils;
 
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
@@ -13,7 +16,13 @@ public class MathUtils {
         float emi = ((current - val) * (speed/2)) > 0 ? Math.max((speed), Math.min(current - val, ((current - val) * (speed/2)))) : Math.max(current - val, Math.min(-(speed/2), ((current - val) * (speed/2))));
         return val + emi;
     }
-
+    public static float getDistance(Vec3d pos, Vec3d pos2)
+    {
+        float f = (float)(pos.xCoord - pos2.xCoord);
+        float f1 = (float)(pos.yCoord - pos2.yCoord);
+        float f2 = (float)(pos.zCoord - pos2.zCoord);
+        return MathHelper.sqrt(f * f + f1 * f1 + f2 * f2);
+    }
 
     public static float lerp(float numer, float to, float speed) {
         return numer + speed * (to - numer);
@@ -47,10 +56,15 @@ public class MathUtils {
         return val;
     }
 
-    public static double round(float num, double increment) {
-        double v = (double)Math.round(num / increment) * increment;
+    public static float round(float num, float increment) {
+
+        float v = (float)Math.round(num / increment) * increment;
         BigDecimal bd = new BigDecimal(v);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+        return bd.floatValue();
+
+
+
+
     }
 }

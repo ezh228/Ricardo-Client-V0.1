@@ -1,5 +1,7 @@
 package ru.terrarXD.shit.settings;
 
+import ru.terrarXD.shit.utils.MathUtils;
+
 /**
  * @author zTerrarxd_
  * @since 22:29 of 20.04.2023
@@ -34,6 +36,6 @@ public class FloatSetting extends Setting{
     }
 
     public void setVal(float val) {
-        this.val = val;
+        this.val = MathUtils.clamp((float) MathUtils.round(val, percent), min, max);
     }
 }

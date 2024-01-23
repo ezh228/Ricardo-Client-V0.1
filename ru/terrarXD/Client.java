@@ -1,5 +1,6 @@
 package ru.terrarXD;
 
+import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import ru.terrarXD.clickgui.ClickGuiScreen;
 import ru.terrarXD.module.BindType;
@@ -8,13 +9,16 @@ import ru.terrarXD.module.ModuleManager;
 import ru.terrarXD.module.modules.Player.Proverka;
 import ru.terrarXD.shit.FriendsManager;
 import ru.terrarXD.shit.RPC;
+import ru.terrarXD.shit.Theme;
 import ru.terrarXD.shit.config.ConfigManager;
 import ru.terrarXD.shit.event.EventManager;
 import ru.terrarXD.shit.event.EventTarget;
 import ru.terrarXD.shit.event.events.EventKeyBoard;
 import ru.terrarXD.shit.event.events.EventUpdate;
+import ru.terrarXD.shit.scripts.ScriptManager;
 import ru.terrarXD.shit.settings.ColorSetting;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,18 +34,19 @@ public class Client {
     public static final String NAME = "Ricardo";
     public static final String NAME_FULL = "Ricardo Client";
     public static ConfigManager configManager;
-    public static final String VERSION = "V0.9";
+    public static final String VERSION = "V0.9.1";
     public static ModuleManager moduleManager;
     public static EventManager eventManager;
     public static ClickGuiScreen clickGuiScreen;
     public static FriendsManager friendsManager;
+    public static ScriptManager scriptManager;
 
     public static boolean SHADER = true;
 
     public static boolean actual = true;
 
     public Client() throws Exception {
-
+        //Govno Code Moment
 
 
         eventManager = new EventManager();
@@ -49,7 +54,9 @@ public class Client {
         moduleManager = new ModuleManager();
         friendsManager = new FriendsManager();
         configManager = new ConfigManager();
+        scriptManager = new ScriptManager();
         configManager.load();
+        Minecraft.getMinecraft().gameSettings.ofFastRender = false;
         clickGuiScreen = new ClickGuiScreen();
         URL url = new URL("https://ricardoclient.netlify.app/version");
         URLConnection con = url.openConnection();
@@ -66,6 +73,7 @@ public class Client {
         }
 
     }
+
 
 
     public static int getColor(){

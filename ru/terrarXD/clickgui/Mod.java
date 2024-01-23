@@ -1,36 +1,38 @@
 package ru.terrarXD.clickgui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.terrarXD.Client;
-import ru.terrarXD.clickgui.sets.*;
+import ru.terrarXD.clickgui.set.*;
+import ru.terrarXD.module.BindType;
 import ru.terrarXD.module.Module;
 import ru.terrarXD.shit.fonts.Fonts;
 import ru.terrarXD.shit.settings.*;
-import ru.terrarXD.shit.utils.*;
+import ru.terrarXD.shit.utils.AnimationUtils;
+import ru.terrarXD.shit.utils.ColorUtils;
+import ru.terrarXD.shit.utils.RenderUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 /**
  * @author zTerrarxd_
- * @date 06.11.2023 20:15
+ * @since 20:06 of 19.04.2023
  */
-public class Mod extends Comp {
-    boolean binding = false;
-
-    ArrayList<Particle2D> particle2DS = new ArrayList<>();
-
-    Module module;
-    int key = 0;
-    AnimationUtils anim = new AnimationUtils(0, 0, 0.1f);
-    AnimationUtils animButton = new AnimationUtils(0, 0, 0.1f);
-    AnimationUtils animBind = new AnimationUtils(0, 0, 0.01f);
-
+public class Mod extends Comp{
     ArrayList<Set> sets = new ArrayList<>();
+    boolean binding = false;
+    Module module;
+    AnimationUtils anim;
+    float sz;
+
+
+    AnimationUtils animEnable;
     public Mod(Module module){
-        this.module = module;
+        this.module= module;
+        anim = new AnimationUtils(0, 255, 0.1f);
+        animEnable = new AnimationUtils(0, 0, 0.1f);
         for (Setting setting : module.getSettings()){
             if (setting instanceof BooleanSetting){
                 sets.add(new CheckBox((BooleanSetting) setting));
@@ -38,178 +40,141 @@ public class Mod extends Comp {
             if (setting instanceof FloatSetting){
                 sets.add(new Slider((FloatSetting) setting));
             }
-            if (setting instanceof ModeSetting){
-                sets.add(new ComboBox((ModeSetting) setting));
-            }
             if (setting instanceof ColorSetting){
                 sets.add(new ColorPiker((ColorSetting) setting));
             }
+            if (setting instanceof ModeSetting){
+                sets.add(new ComboBox((ModeSetting) setting));
+            }
         }
-        key = module.getKey();
-    }
-
-    public Module getModule() {
-        return module;
-    }
-
-    public void bind(){
-        if (Keyboard.getEventKey() == Keyboard.KEY_DELETE){
-            module.setKey(0);
-        }else {
-            module.setKey(Keyboard.getEventKey());
-        }
-        binding = false;
     }
 
     @Override
     public void drawScreen(float x, float y, float mouseX, float mouseY) {
         super.drawScreen(x, y, mouseX, mouseY);
-
+        if (isHover(x, y, x+getWidth(), y+getHeight(), mouseX, mouseY)){
+            Client.clickGuiScreen.canDrag = false;
+        }
+        int color = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.95d).getRGB());
+        int color2 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.7d).getRGB());
+        int color3 = getColor(ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.clickGuiScreen.getColor()), 0.6d).getRGB());
         if (binding){
+            RenderUtils.drawRoundedRect(x, y, x+getWidth(), y+getHeight(),10,color);
+
             if (Keyboard.isKeyDown(Keyboard.getEventKey())){
-                if (key != Keyboard.getEventKey()){
-                    animBind.setAnim(0);
-                    animBind.to = 0;
-                }else if (animBind.getAnim() == 1){
-                    bind();
-                }else if (key == Keyboard.getEventKey()){
-                    animBind.to = 1f;
-                }
-                key = Keyboard.getEventKey();
-            }else {
-                animBind.to = 0f;
+                if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+                    binding = false;
 
+                } else if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)){
+                    binding = false;
+                    module.setKey(0);
+                }else {
+                    module.setKey(Keyboard.getEventKey());
+                    binding = false;
+                }
             }
-        }
-        if (module.isEnabled()){
-            animButton.to = 1;
+            Fonts.main_20.drawString(BindType.Toggle.name(), x+10, y+10-(Fonts.main_20.getHeight()/2), getColor(module.getBindType() == BindType.Toggle ? -1 : new Color(200, 200, 200).getRGB()));
+            Fonts.main_20.drawString(BindType.Hold.name(), x+10+5+Fonts.main_20.getStringWidth(BindType.Toggle.name()), y+10-(Fonts.main_20.getHeight()/2),getColor( module.getBindType() == BindType.Hold ? -1 : new Color(200, 200, 200).getRGB()));
+            Fonts.main_20.drawString( "["+Keyboard.getKeyName(module.getKey())+"]", x+getWidth()-5-Fonts.main_20.getStringWidth("["+Keyboard.getKeyName(module.getKey())+"]"), y+10-(Fonts.main_20.getHeight()/2), getColor(-1));
         }else {
-            animButton.to = 0;
-        }
-
-        if (isHover(x, y, x+getWidth(), y+18+3, mouseX, mouseY)){
-            anim.to = 1;
-        }else {
-            anim.to = 0;
-        }
-        int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.1d).getRGB();
-        int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.3d).getRGB();
-        int color = new Color(29, 29, 29).getRGB();
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x+getWidth(), y+getHeight(), 5, 1, colorMain1, colorMain1, colorMain2, colorMain2, false, true, true);
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y+3, x+getWidth(), y+getHeight(), 5, 1, color, color, color, color, false, true, true);
-        Fonts.main_15.drawString(module.getName(), x+6+anim.getAnim()*3, y+3+18/2-Fonts.main_15.getHeight()/2, -1);
-        //Button
-        int pos = (int) (getWidth()-25);
+            animEnable.to = module.isEnabled() ? 1 : 0;
 
 
-        if (binding){
-            Fonts.main_12.drawCenteredString(""+Keyboard.getKeyName(key),x+pos+10, y+3+18/2-Fonts.main_12.getHeight()/2, -1);
-
-            RenderUtils.drawCircle2D(x+pos+10, y+3+18/2, 5, (int) (animBind.getAnim()*360f), colorMain2, animBind.getAnim()*3f);
-            int i = (int) (animBind.getAnim()*360f);
-            float partX = (float) ((double)x + Math.sin((double)i * Math.PI / 180.0D) * (double)5)+pos+10;
-            float partY = (float) ((double)y + Math.cos((double)i * Math.PI / 180.0D) * (double)5)+3+18/2;
-            particle2DS.add(new Particle2D(partX, partY, animBind.getAnim(), 10));
-            
-        }else {
-            if (animButton.getAnim() != animButton.to){
-                particle2DS.add(new Particle2D(x+pos+5+animButton.getAnim()*10f, y+3+18f/2f, 4));
+            RenderUtils.drawRoundedRect(x, y, x+getWidth(), y+getHeight(),10,color);
+            Fonts.main_20.drawString(module.getName(), x+10, y+10-(Fonts.main_20.getHeight()/2), getColor(-1));
+            float posX = x+getWidth()-10-10;
+            for (int i = 0; i < 10; i++) {
+                RenderUtils.drawCircle(posX+i, y+10,4, getColor(module.isEnabled() ? color2 : new Color(40, 40, 40).getRGB()));
             }
-            int gg = 1;
-            if (module.isEnabled()){
-                RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x+pos, y+3+4, x+pos+20, y+3f+18-4, 5, 1, colorMain1, colorMain2, colorMain2, colorMain1, false, true ,true);
-                int radius = 4;
-                if ((1f - animButton.getAnim()) >= 0.01f){
-                    Fonts.icons_12.drawCenteredString("I", x+pos+5+9, y+gg+3+18f/2f-Fonts.icons_12.getHeight()/2, ColorUtils.swapAlpha(-1, (int) (255f*(1f - animButton.getAnim()))));
-                }
-                if ((animButton.getAnim()) >= 0.01f) {
-                    Fonts.icons_12.drawCenteredString("H", x+pos+5, y+gg+3+18f/2f-Fonts.icons_12.getHeight()/2, ColorUtils.swapAlpha(-1, (int) (255f*animButton.getAnim())));
-                }
-                RenderUtils.drawCircle(x+pos+5+animButton.getAnim()*10f, y+3+18f/2f, radius, -1);
-            }else {
-                RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x+pos, y+3+4, x+pos+20, y+3f+18-4, 5, 1, -1, -1, -1, -1, false, true ,true);
-                int radius = 4;
-                if ((1f - animButton.getAnim()) >= 0.01f){
-                    Fonts.icons_12.drawCenteredString("I", x+pos+5+9, y+gg+3+18f/2f-Fonts.icons_12.getHeight()/2, ColorUtils.swapAlpha(colorMain1, (int) (255f*(1f - animButton.getAnim()))));
-                }
-                if ((animButton.getAnim()) >= 0.01f) {
-                    Fonts.icons_12.drawCenteredString("H", x+pos+5, y+gg+3+18f/2f-Fonts.icons_12.getHeight()/2, ColorUtils.swapAlpha(colorMain2, (int) (255f*animButton.getAnim())));
-                }
-                RenderUtils.drawCircle(x+pos+5+animButton.getAnim()*10f, y+3+18f/2f, radius, colorMain2);
-            }
-        }
-        for (int i = 0; i < particle2DS.size(); i++) {
-            if (particle2DS.get(i).toRemove()){
-                particle2DS.remove(i);
-            }else {
-                particle2DS.get(i).drawAndMovement();
-            }
+            RenderUtils.drawCircle(posX+(10*animEnable.getAnim()), y+10, 3.5f, getColor(module.isEnabled() ? color3 : new Color(60, 60, 60).getRGB()));
         }
 
-        if (sets.size()>0){
-            RenderUtils.drawRect(x+5, y+20, x+getWidth()-25-2, y+21, new Color(0, 0, 0, 50).getRGB());
-        }
-        int posY = 18;
+
+        //GL11.glColor4f(1, 1, 1, 1);
+        //Sets
+
+
+        //StencilUtil.initStencilToWrite();
+        //RenderUtils.drawRoundedRect(x, y+20, x+getWidth(), y+getHeight(),10,color);
+        //StencilUtil.readStencilBuffer(1);
+        float ySets = y+ 20;
+        float size = 20;
+
         for (Set set : sets){
-            if(set.getSetting().isVisable()){
-                set.drawScreen(x, y+posY, mouseX, mouseY);
-                posY+=set.getHeight();
+            if (set.getSetting().isVisable()){
+                GL11.glColor4f(0, 0, 0, 0);
+
+                GlStateManager.color((color >> 16 & 0xFF) / 255.0f, (color >> 8 & 0xFF) / 255.0f, (color & 0xFF) / 255.0f, 255);
+
+
+                set.drawScreen(x+5,ySets, mouseX, mouseY);
+                GlStateManager.clearColor(1, 1, 1, 1);
+
+                ySets+=set.getHeight();
+                size+=set.getHeight();
             }
 
         }
-    }
+        sz = size;
 
+
+
+
+        //StencilUtil.uninitStencilBuffer();
+    }
+    public int getColor(int color){
+        return ColorUtils.swapAlpha(color, (int) ((new Color(color).getAlpha() * anim.getAnim())/255));
+    }
     @Override
     public void mouseClicked(float x, float y, float mouseX, float mouseY, int button) {
         super.mouseClicked(x, y, mouseX, mouseY, button);
-        if (isHover(x, y, x+getWidth(), y+18+3, mouseX, mouseY) && button == 0){
-            System.out.println(module.getName());
+        if (isHover(x, y, x+getWidth(), y+20, mouseX, mouseY)){
+            if (binding){
+                if (isHover(x+10, y+10-(Fonts.main_20.getHeight()/2), x+10+Fonts.main_20.getStringWidth(BindType.Toggle.name()), y+10+(Fonts.main_20.getHeight()/2), mouseX, mouseY) && button == 0){
+                    module.setBindType(BindType.Toggle);
+                }
+                if (isHover(x+10+5+Fonts.main_20.getStringWidth(BindType.Toggle.name()), y+10-(Fonts.main_20.getHeight()/2), x+10+5+Fonts.main_20.getStringWidth(BindType.Toggle.name())+Fonts.main_20.getStringWidth(BindType.Toggle.name()), y+10+(Fonts.main_20.getHeight()/2), mouseX, mouseY) && button == 0){
+                    module.setBindType(BindType.Hold);
+                }
+            }else {
+                if (button == 0){
+                    module.toggle();
 
-            module.toggle();
+                }
+            }
 
+            if (button == 2){
+                binding = true;
+            }
         }
-        if (isHover(x, y, x+getWidth(), y+18+3, mouseX, mouseY) && button == 2){
-            binding = !binding;
-
-        }
-        int posY = 18;
+        float ySets = y+ 20;
         for (Set set : sets){
-            if(set.getSetting().isVisable()){
-                set.mouseClicked(x, y+posY, mouseX, mouseY, button);
-                posY+=set.getHeight();
+            if (set.getSetting().isVisable()) {
+                set.mouseClicked(x+5,ySets, mouseX, mouseY, button);
+                ySets+=set.getHeight();
             }
 
         }
 
-    }
-
-    @Override
-    public float getHeight() {
-        int he = 18+3;
-        int posY = 18+3+3;
-        for (Set set : sets){
-            if(set.getSetting().isVisable()){
-                posY+=set.getHeight();
-
-            }
-
-        }
-        return posY;
-    }
-    public float getStaticHeight() {
-        int he = 18+3;
-        int posY = 18+3+3;
-        for (Set set : sets){
-            posY+=set.getHeight();
-
-
-
-        }
-        return posY;
     }
 
     @Override
     public float getWidth() {
-        return (Client.clickGuiScreen.WIDTH-100-40-10)/2;
+            return (Client.clickGuiScreen.sizeX-120-15)/2;
+    }
+
+    @Override
+    public float getHeight() {
+        return sz;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        animEnable.setAnim(0);
+        anim.setAnim(0);
+        for (Set set : sets){
+            set.reset();
+        }
     }
 }

@@ -28,20 +28,9 @@ public class Fonts
     public static CFontRenderer main_23 = new CFontRenderer(getFontTTF("sf-ui", 23), true, true);
     public static CFontRenderer main_24 = new CFontRenderer(getFontTTF("sf-ui", 24), true, true);
     public static CFontRenderer main_25 = new CFontRenderer(getFontTTF("sf-ui", 25), true, true);
-
-    public static CFontRenderer main_36 = new CFontRenderer(getFontTTF("sf-ui", 48), true, true);
-
+    public static CFontRenderer main_36 = new CFontRenderer(getFontTTF("sf-ui", 26), true, true);
 
 
-
-
-    public static CFontRenderer icons_12 = new CFontRenderer(getFontTTF("stylesicons", 12), true, true);
-    public static CFontRenderer icons_13 = new CFontRenderer(getFontTTF("stylesicons", 13), true, true);
-    public static CFontRenderer icons_14 = new CFontRenderer(getFontTTF("stylesicons", 14), true, true);
-    public static CFontRenderer icons_15 = new CFontRenderer(getFontTTF("stylesicons", 15), true, true);
-    public static CFontRenderer icons_16 = new CFontRenderer(getFontTTF("stylesicons", 16), true, true);
-    public static CFontRenderer icons_17 = new CFontRenderer(getFontTTF("stylesicons", 17), true, true);
-    public static CFontRenderer icons_18 = new CFontRenderer(getFontTTF("stylesicons", 18), true, true);
 
     public static Font getFontTTF(String name, int size)
     {

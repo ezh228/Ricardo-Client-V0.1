@@ -2,6 +2,8 @@ package ru.terrarXD.shit.config;
 
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
+import ru.terrarXD.Client;
+import ru.terrarXD.module.modules.Hud.Notifications;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +14,14 @@ import java.io.IOException;
  */
 public class ConfigManager {
     public final File CLIENT_FOLDER = new File(Minecraft.getMinecraft().mcDataDir, "Ricardo");
+    public final File SCRIPTS_FOLDER = new File(CLIENT_FOLDER, "scripts");
+
     public ConfigModules configModules;
     public ConfigGuiIMG configGuiIMG;
 
     public ConfigManager(){
         CLIENT_FOLDER.mkdirs();
+        SCRIPTS_FOLDER.mkdir();
         configModules=new ConfigModules("config", CLIENT_FOLDER);
         configGuiIMG = new ConfigGuiIMG("img", CLIENT_FOLDER);
 
@@ -29,6 +34,10 @@ public class ConfigManager {
 
     }
     public void save(){
+        try {
+            ((Notifications)Client.moduleManager.getModule("Notifications")).displayNotif(new Notifications.Notif("CFG System", "КФГ сохранён"));
+        } catch (Exception e) {
+        }
         configModules.save();
     }
     public void remove(){

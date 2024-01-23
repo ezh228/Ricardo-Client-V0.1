@@ -21,6 +21,7 @@ import ru.terrarXD.Client;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static net.minecraft.client.renderer.GlStateManager.resetColor;
 import static org.lwjgl.opengl.GL11.*;
@@ -41,6 +42,33 @@ public class RenderUtils {
         //RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x2, y2, 5, 0, colorFon, colorFon, colorFon, colorFon, false ,true, false);
 
 
+    }
+
+    public static void drawLine(float x, float y, float x2, float y2, int color, float width) {
+        float f = (float)(color >> 24 & 255) / 255.0F;
+        float f1 = (float)(color >> 16 & 255) / 255.0F;
+        float f2 = (float)(color >> 8 & 255) / 255.0F;
+        float f3 = (float)(color & 255) / 255.0F;
+        GL11.glPushMatrix();
+        GL11.glPushAttrib(1048575);
+        GL11.glEnable(3042);
+        GL11.glDisable(2884);
+        GL11.glDisable(3553);
+        GL11.glColor4f(f1, f2, f3, f);
+        GL11.glLineWidth(width);
+        GL11.glBegin(GL_LINE_STRIP);
+
+        GL11.glVertex2f(x, y);
+        GL11.glVertex2f(x2, y2);
+
+
+        GL11.glEnd();
+        GL11.glEnable(3553);
+        GL11.glEnable(2884);
+        GL11.glDisable(3042);
+        GL11.glPopAttrib();
+        GL11.glPopMatrix();
+        GlStateManager.resetColor();
     }
 
     public static void renderEntityFilledBoundingBox(final Entity entity, final Color color, final float alpha){

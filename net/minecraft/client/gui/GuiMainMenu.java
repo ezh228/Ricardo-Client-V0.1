@@ -133,7 +133,6 @@ public class GuiMainMenu extends GuiScreen
     private GuiButton modButton;
     private GuiScreen modUpdateNotification;
 
-    ShaderMainGui backgroundShader;
     long initTime = System.currentTimeMillis();
 
     public GuiMainMenu()
@@ -141,14 +140,10 @@ public class GuiMainMenu extends GuiScreen
         this.openGLWarning2 = MORE_INFO_TEXT;
         this.splashText = "missingno";
         IResource iresource = null;
-        /*
-        try {
-            this.backgroundShader = new ShaderMainGui("/noise.fsh");
-        } catch (IOException var9) {
-            throw new IllegalStateException("Failed to load backgound shader", var9);
-        }
-        
-         */
+
+
+
+
         try
         {
             List<String> list = Lists.<String>newArrayList();
@@ -241,6 +236,7 @@ public class GuiMainMenu extends GuiScreen
     public void initGui()
     {
         initTime = System.currentTimeMillis();
+
         alphaAnim.reset();
         alphaAnim.to = 255;
         alphaAnim.setAnim(0);
@@ -645,48 +641,18 @@ public class GuiMainMenu extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.panoramaTimer += partialTicks;
-        GlStateManager.disableAlpha();
-        //this.renderSkybox(mouseX, mouseY, partialTicks);
-        GlStateManager.enableAlpha();
-        int i = 274;
-        int j = this.width / 2 - 137;
-        int k = 30;
-        int l = -2130706433;
-        int i1 = 16777215;
-        int j1 = 0;
-        int k1 = Integer.MIN_VALUE;
-        /*
-        CustomPanoramaProperties custompanoramaproperties = CustomPanorama.getCustomPanoramaProperties();
 
-        if (custompanoramaproperties != null)
-        {
-            l = custompanoramaproperties.getOverlay1Top();
-            i1 = custompanoramaproperties.getOverlay1Bottom();
-            j1 = custompanoramaproperties.getOverlay2Top();
-            k1 = custompanoramaproperties.getOverlay2Bottom();
-        }
-
-        if (l != 0 || i1 != 0)
-        {
-            this.drawGradientRect(0, 0, this.width, this.height, l, i1);
-        }
-
-        if (j1 != 0 || k1 != 0)
-        {
-            this.drawGradientRect(0, 0, this.width, this.height, j1, k1);
-        }
-
-         */
+        ScaledResolution sr = new ScaledResolution(mc);
         Gui.drawRect(0, 0, width ,height, Color.BLACK.getRGB());
-        //this.backgroundShader.useShader(0, 0, (float)width, (float)height, (float)(System.currentTimeMillis() - this.initTime) / 1000.0F);
+        GlStateManager.disableCull();
 
-        RenderUtils.drawImage(new ResourceLocation("client/img/mainmenu.jpg"),(int) xAnim.getAnim() - 25, (int) yAnim.getAnim() - 25,width + 25, height +25, new Color(255, 255, 255,(int) alphaAnim.getAnim()).getRGB());
+
+        //RenderUtils.drawImage(new ResourceLocation("client/img/mainmenu.jpg"),(int) xAnim.getAnim() - 25, (int) yAnim.getAnim() - 25,width + 25, height +25, new Color(255, 255, 255,(int) alphaAnim.getAnim()).getRGB());
         xAnim.to = 25 * mouseX / width;
         yAnim.to = 25 * mouseY / height;
         xAnim.speed = 0.1f;
         yAnim.speed=  0.1f;
-        GaussianBlur.renderBlur(10,() -> RenderUtils.drawRect(0, 0, width, height, -1));
+        //GaussianBlur.renderBlur(10,() -> RenderUtils.drawRect(0, 0, width, height, -1));
 
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -731,7 +697,7 @@ public class GuiMainMenu extends GuiScreen
 
         GL11.glPushMatrix();
         RenderUtils.customScaledObject2D(width/2-110, height/8+20, (width/2+110)-(width/2-110), (height/2)-(height/8+20), 2);
-        BloomUtil.renderBlur(()->Fonts.main_18.drawCenteredString(Client.NAME_FULL+" " +Client.VERSION, width/2, height/8+80, -1));
+        //BloomUtil.renderBlur(()->Fonts.main_18.drawCenteredString(Client.NAME_FULL+" " +Client.VERSION, width/2, height/8+80, -1));
         Fonts.main_18.drawCenteredString(Client.NAME_FULL+" " +Client.VERSION, width/2, height/8+80, -1);
         GL11.glPopMatrix();
         String s = "Minecraft 1.12.2";
@@ -763,8 +729,6 @@ public class GuiMainMenu extends GuiScreen
         else
         {
 
-            BloomUtil.renderBlur(()->Fonts.main_18.drawString("От создателей Lithium Client, Ricardo Client и Bobr Cleint, для обыных роботяг", 2, this.height - 10, -1));
-            Fonts.main_18.drawString("От создателей Lithium Client, Ricardo Client и Bobr Cleint, для обыных роботяг", 2, this.height - 10, -1);
             //this.drawString(this.fontRendererObj, s, 2, this.height - 10, -1);
 
         }

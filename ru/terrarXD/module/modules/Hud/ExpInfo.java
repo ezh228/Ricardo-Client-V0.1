@@ -184,19 +184,13 @@ public class ExpInfo extends HudModule {
                 exes.remove(i);
             }
         }
-        setSizeY(15+exes.size()*16+4);
+        setSizeY(15+exes.size()*16);
         animSize.to = getSizeY();
         int col = clientColor.getVal() ? Client.getColor() : customColor.getColor().getRGB();
 
-        int colorMain1 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.1d).getRGB();
-        int colorMain2 = ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(Client.getColor()), 0.3d).getRGB();
-        int color = new Color(29, 29, 29).getRGB();
         int colorMain =ColorUtils.TwoColoreffect(new Color(29, 29, 29), new Color(col), 0.9d).getRGB();
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x+getSizeX(), y+getSizeY(), 5, 1f, colorMain2, colorMain1, colorMain2, colorMain1, false, true, true);
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y+3, x+getSizeX(), y+getSizeY(), 5, 1f, color, color, color, color, false, true, true);
-        //RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x + getSizeX(), y + animSize.getAnim(), 5, 0, colorMain, colorMain, colorMain, colorMain, false, true, false);
-        y+=3;
-        Fonts.main_18.drawCenteredString(getName(), x+getSizeX()/2, y+15/2-Fonts.main_18.getHeight()/2, Client.getColor());
+        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x, y, x + getSizeX(), y + animSize.getAnim(), 5, 0, colorMain, colorMain, colorMain, colorMain, false, true, false);
+        Fonts.main_18.drawCenteredString(getName(), x+getSizeX()/2, y+15/2-Fonts.main_18.getHeight()/2, -1);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         RenderUtils.scissor(x, y, 100, animSize.getAnim());
         //System.out.println(mc.player.getHeldItemMainhand().getDisplayName());
@@ -208,7 +202,7 @@ public class ExpInfo extends HudModule {
             i+=ex.getHeight();
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        RenderUtils.drawRoundedFullGradientShadowFullGradientRoundedFullGradientRectWithBloomBool(x,  y+15+animChouse.getAnim()+16/2-2, x+1, y+15+animChouse.getAnim()+16/2+2, 1, 1f, colorMain1, colorMain1, colorMain1, colorMain1, false, true ,true);
+        RenderUtils.drawRect(x,  y+15+animChouse.getAnim()+16/2-2, x+1, y+15+animChouse.getAnim()+16/2+2, col);
     }
 
     public class Ex{
